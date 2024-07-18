@@ -48,12 +48,12 @@ configure_proxmox_users() {
 
   log "Executing SSH commands on Proxmox server..."
   ssh $PROXMOX_USER@$PROXMOX_USER_IP << EOF > /tmp/proxmox_output.log 2>&1
-pveum role add provisioner -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
-pveum user add userprovisioner@pve
-pveum aclmod / -user userprovisioner@pve -role provisioner
-pveum user token add userprovisioner@pve provisioner-token --privsep=0
-pveum aclmod /storage/local --user userprovisioner@pve --role PVEDatastoreAdmin --token userprovisioner@pve!provisioner-token
-pveum user token list userprovisioner@pve provisioner-token --output-format=json
+pveum role add provision -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
+pveum user add userprovision@pve
+pveum aclmod / -user userprovision@pve -role provision
+pveum user token add userprovision@pve provision-token --privsep=0
+pveum aclmod /storage/local --user userprovision@pve --role PVEDatastoreAdmin --token userprovision@pve!provision-token
+pveum user token list userprovision@pve provision-token --output-format=json
 hostname
 EOF
 
@@ -64,7 +64,7 @@ EOF
   read -p "Have you copied the API token? Type 'yes' to continue: " confirmation
   if [ "$confirmation" == "yes" ]; then
     echo "Creating .env file..."
-    echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > .env
+    echo "PROXMOX_API_ID=userprovision@pve!provision-token" > .env
     echo "PROXMOX_API_TOKEN=" >> .env
     echo "PROXMOX_NODE_IP=$PROXMOX_USER_IP" >> .env
     echo "PROXMOX_NODE_NAME=pve" >> .env
