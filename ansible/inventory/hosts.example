@@ -5,7 +5,7 @@ linux:
     ansible_sudo_pass: ubuntu
     ansible_shell_type: sh
   hosts:
-    ubuntu:
+    Linux-Desktop:
       ansible_host: <ip_address>
 
 windows:
@@ -14,17 +14,9 @@ windows:
     ansible_password: ProvisionPassword.
     ansible_shell_type: cmd
   hosts:
-    DC:
+    Win-Server:
       ansible_host: <ip_address>
-    FS:
-      ansible_host: <ip_address>
-    ADCS:
-      ansible_host: <ip_address>
-    WEB:
-      ansible_host: <ip_address>
-    WS1:
-      ansible_host: <ip_address>
-    WS2:
+    Win-Desktop:
       ansible_host: <ip_address>
 
 # fill and rename in hosts.yml
