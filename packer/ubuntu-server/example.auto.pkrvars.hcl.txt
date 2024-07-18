@@ -1,6 +1,6 @@
 # change variables and rename this file as *.auto.pkrvars.hcl
-lab_username = "ubuntu"
-lab_password = "ubuntu"
+lab_username = "snare"
+lab_password = "snare"
 proxmox_api_id = "<proxmox_api_id>"
 proxmox_api_token = "<proxmox_api_token>"
 proxmox_node = "<proxmox_node_ip>"
