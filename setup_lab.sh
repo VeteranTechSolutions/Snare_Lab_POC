@@ -48,14 +48,8 @@ update_system_and_install_dependencies() {
 
   log "Updating and upgrading the system, and installing required packages..."
 
-  {
-    sudo apt update && sudo apt upgrade -y && \
-    sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv
-  } | tee -a $LOGFILE | whiptail --gauge "Updating and upgrading the system, and installing required packages..." 8 78 0
-
-  if [ $? -ne 0 ]; then
-    error_exit "Failed to update and install required packages."
-  fi
+  sudo apt update && sudo apt upgrade -y && \
+  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv || error_exit "Failed to update and install required packages."
 
   log "System update and installation of dependencies completed."
 }
