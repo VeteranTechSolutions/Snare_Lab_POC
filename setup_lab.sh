@@ -13,7 +13,7 @@ update_system_and_install_dependencies() {
   log "Updating and upgrading the system, and installing required packages..."
 
   sudo apt update && sudo apt upgrade -y
-  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv sshpass
+  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv
 
   log "System update and installation of dependencies completed."
 }
