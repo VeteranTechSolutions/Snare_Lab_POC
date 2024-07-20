@@ -13,36 +13,38 @@ error_exit() {
 }
 
 source_env() {
-  if [ -f ../proxmox_credentials.conf ]; then
-    log "Sourcing Proxmox credentials..."
-    source ../proxmox_credentials.conf
+  if [ -f proxmox_credentials.conf ]; then
+    log "Sourcing proxmox_credentials.conf file..."
+    source proxmox_credentials.conf
   else
-    error_exit "Proxmox credentials not found! Exiting..."
-  fi
-}
-
-validate_token() {
-  local token=$1
-  if [[ ${#token} -eq 36 ]]; then
-    return 0
-  else
-    return 1
+    error_exit "proxmox_credentials.conf file not found! Exiting..."
   fi
 }
 
 configure_proxmox_users() {
-  echo -e "\n\n####################### Starting Step 3 #######################\n" | tee -a $LOGFILE
-
-  log "Configuring Proxmox users and roles..."
-
   source_env
 
-  EXISTING_USER=$(ssh $PROXMOX_USER@$PROXMOX_IP "pveum user list | grep -w 'userprovisioner@pve'")
+  log "Checking if Proxmox user already exists..."
 
-  if [ -z "$EXISTING_USER" ]; then
-    log "User does not exist. Creating user and roles..."
+  USER_EXISTS=$(sshpass -p $PROXMOX_PASS ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "pveum user list | grep -c 'userprovisioner@pve'")
 
-    ssh $PROXMOX_USER@$PROXMOX_IP << EOF
+  if [ "$USER_EXISTS" -eq "1" ]; then
+    log "User already exists. Prompting for existing API token."
+    PROXMOX_API_TOKEN=$(whiptail --inputbox "Enter existing API token:" 8 78 --title "Existing API Token" 3>&1 1>&2 2>&3)
+
+    if [ ${#PROXMOX_API_TOKEN} -ne 36 ]; then
+      error_exit "Invalid API token length. Expected 36 characters."
+    fi
+
+    echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > .env
+    echo "PROXMOX_API_TOKEN=$PROXMOX_API_TOKEN" >> .env
+    echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> .env
+    echo "PROXMOX_NODE_NAME=pve" >> .env
+    log "API token saved to .env file."
+  else
+    log "Configuring Proxmox users and roles..."
+
+    sshpass -p $PROXMOX_PASS ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP << EOF > /tmp/proxmox_output.log 2>&1
 pveum role add provisioner -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
 pveum user add userprovisioner@pve
 pveum aclmod / -user userprovisioner@pve -role provisioner
@@ -52,53 +54,61 @@ pveum user token list userprovisioner@pve provisioner-token --output-format=json
 hostname
 EOF
 
-    TOKEN=$(ssh $PROXMOX_USER@$PROXMOX_IP "pveum user token list userprovisioner@pve provisioner-token --output-format=json | jq -r '.[0].value'")
+    log "SSH command output:"
+    cat /tmp/proxmox_output.log | tee -a $LOGFILE
 
-    if validate_token "$TOKEN"; then
-      log "Token generated and validated."
-    else
-      error_exit "Invalid token generated."
+    API_TOKEN=$(grep -Po '(?<=│ value │ )\S+(?=\s+│)' /tmp/proxmox_output.log)
+
+    if [ -z "$API_TOKEN" ]; then
+      error_exit "Failed to capture API token."
     fi
 
-  else
-    log "User already exists. Prompting for token..."
-
-    TOKEN=$(whiptail --inputbox "Enter the existing token for userprovisioner@pve:" 8 78 --title "Proxmox Token" 3>&1 1>&2 2>&3)
-
-    if validate_token "$TOKEN"; then
-      log "Token validated."
-    else
-      error_exit "Invalid token entered."
-    fi
+    echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > .env
+    echo "PROXMOX_API_TOKEN=$API_TOKEN" >> .env
+    echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> .env
+    echo "PROXMOX_NODE_NAME=pve" >> .env
+    log "API token saved to .env file."
   fi
+}
 
-  echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > ../proxmox_token.conf
-  echo "PROXMOX_API_TOKEN=$TOKEN" >> ../proxmox_token.conf
+replace_placeholders() {
+  source_env
 
-  whiptail --msgbox "Proxmox users and roles configured successfully. Next, running ./replace_placeholders.sh" 8 78 --title "Step 3 Complete"
+  log "Replacing placeholders in configuration files..."
+  find . -type f ! -name "requirements.sh" -exec sed -i \
+    -e "s/<proxmox_api_id>/$PROXMOX_API_ID/g" \
+    -e "s/<proxmox_api_token>/$PROXMOX_API_TOKEN/g" \
+    -e "s/<proxmox_node_ip>/$PROXMOX_NODE_IP/g" \
+    -e "s/<proxmox_node_name>/$PROXMOX_NODE_NAME/g" {} +
 
-  log "Proxmox users and roles configured successfully."
+  find ./packer -type f -name "example.auto.pkrvars.hcl.txt" -exec bash -c \
+    'mv "$0" "${0/example.auto.pkrvars.hcl.txt/value.auto.pkrvars.hcl}"' {} \;
 
-  log "Making the next script (replace_placeholders.sh) executable..."
-  chmod +x ../replace_placeholders.sh || error_exit "Failed to make replace_placeholders.sh executable."
-  log "Next script (replace_placeholders.sh) is now executable."
+  find ./terraform -type f -name "example-terraform.tfvars.txt" -exec bash -c \
+    'mv "$0" "${0/example-terraform.tfvars.txt/terraform.tfvars}"' {} \;
+
+  log "Placeholders in configuration files replaced successfully."
+}
+
+main() {
+  configure_proxmox_users
+  replace_placeholders
+
+  whiptail --msgbox "Proxmox users configured and placeholders replaced successfully. Next, running ./install_automation_tools.sh" 8 78 --title "Step 3 Complete"
 
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
   #    NEXT STEP: Running the following command:               #
   #                                                            #
-  #    ./replace_placeholders.sh                               #
+  #    ./install_automation_tools.sh                           #
   #                                                            #
   ##############################################################
   \033[0m"
 
-  # Run the next script
-  ../replace_placeholders.sh
-}
-
-main() {
-  configure_proxmox_users
+  # Make the next script executable and run it
+  chmod +x ./install_automation_tools.sh || error_exit "Failed to make install_automation_tools.sh executable."
+  ./install_automation_tools.sh
 }
 
 main
