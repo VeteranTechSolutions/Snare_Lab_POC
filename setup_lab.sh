@@ -12,15 +12,15 @@ error_exit() {
   exit 1
 }
 
-validate_proxmox_credentials() {
-  log "Validating Proxmox credentials..."
-  if sshpass -p "$PROXMOX_PASS" ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=5 $PROXMOX_USER@$PROXMOX_IP "echo 2>&1" && [ $? -eq 0 ]; then
-    log "Proxmox credentials validated successfully."
-    return 0
-  else
-    log "Failed to validate Proxmox credentials."
-    return 1
-  fi
+update_system_and_install_dependencies() {
+  echo -e "\n\n####################### Starting Step 1 #######################\n" | tee -a $LOGFILE
+
+  log "Updating and upgrading the system, and installing required packages..."
+
+  sudo apt update && sudo apt upgrade -y && \
+  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv sshpass || error_exit "Failed to update and install required packages."
+
+  log "System update and installation of dependencies completed."
 }
 
 initialize_proxmox_credentials() {
@@ -35,30 +35,23 @@ initialize_proxmox_credentials() {
       continue
     fi
 
-    log "Testing Proxmox credentials..."
-    if validate_proxmox_credentials; then
+    echo -e "\nProxmox IP Address: $PROXMOX_IP"
+    echo "Proxmox Username: $PROXMOX_USER"
+    echo -e "Proxmox Password: ********\n"
+
+    read -p "Are these credentials correct? (yes/no): " CONFIRM
+    if [[ "$CONFIRM" == "yes" ]]; then
       cat <<EOL > proxmox_credentials.conf
 PROXMOX_IP=$PROXMOX_IP
 PROXMOX_USER=$PROXMOX_USER
 PROXMOX_PASS=$PROXMOX_PASS
 EOL
-      log "Proxmox credentials saved and validated successfully."
+      log "Proxmox credentials saved."
       break
     else
-      echo "Invalid Proxmox credentials. Please try again."
+      echo "Please re-enter the Proxmox credentials."
     fi
   done
-}
-
-update_system_and_install_dependencies() {
-  echo -e "\n\n####################### Starting Step 1 #######################\n" | tee -a $LOGFILE
-
-  log "Updating and upgrading the system, and installing required packages..."
-
-  sudo apt update && sudo apt upgrade -y && \
-  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv sshpass || error_exit "Failed to update and install required packages."
-
-  log "System update and installation of dependencies completed."
 }
 
 prepare_project() {
