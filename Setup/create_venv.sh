@@ -37,16 +37,12 @@ create_venv() {
   source $(pwd)/venv/bin/activate || error_exit "Failed to activate Python virtual environment."
   log "Python virtual environment activated successfully."
 
-  log "Making the next script (configure_proxmox_users.sh) executable..."
-  chmod +x configure_proxmox_users.sh || error_exit "Failed to make configure_proxmox_users.sh executable."
-  log "Next script (configure_proxmox_users.sh) is now executable."
+  log "Making the next script (configure_user_and_replace_placeholders.sh) executable..."
+  chmod +x configure_user_and_replace_placeholders.sh || error_exit "Failed to make configure_user_and_replace_placeholders.sh executable."
+  log "Next script (configure_user_and_replace_placeholders.sh) is now executable."
 
   echo -e "\033[1;32m
   ########################################################
-  #                                                      #
-  #    Run the following command to activate the venv:   #
-  #                                                      #
-  #           source venv/bin/activate                   #
   #                                                      #
   #                STEP 2 COMPLETE                       #
   #                                                      #
@@ -56,9 +52,10 @@ create_venv() {
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
-  #    NEXT STEP: Run the following command:                   #
+  #    NEXT STEP: Run the following commands:                  #
   #                                                            #
-  #    ./configure_proxmox_users.sh                            #
+  #    source venv/bin/activate                                #
+  #    ./configure_user_and_replace_placeholders.sh            #
   #                                                            #
   ##############################################################
   \033[0m"
