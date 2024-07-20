@@ -54,7 +54,7 @@ main() {
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
-  #    NEXT STEP: Uploading the ISO files to Proxmox host      #
+  #    NEXT STEP: Running the following command:               #
   #                                                            #
   #    ./upload_iso_to_proxmox.sh                              #
   #                                                            #
