@@ -21,26 +21,44 @@ check_install_whiptail() {
   fi
 }
 
+validate_proxmox_credentials() {
+  log "Validating Proxmox credentials..."
+  if ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=5 $PROXMOX_USER@$PROXMOX_IP "echo 2>&1" && [ $? -eq 0 ]; then
+    log "Proxmox credentials validated successfully."
+    return 0
+  else
+    log "Failed to validate Proxmox credentials."
+    return 1
+  fi
+}
+
 initialize_proxmox_credentials() {
   check_install_whiptail
 
-  PROXMOX_IP=$(whiptail --inputbox "Enter Proxmox IP Address:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
-  PROXMOX_USER=$(whiptail --inputbox "Enter Proxmox Username:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
-  PROXMOX_PASS=$(whiptail --passwordbox "Enter Proxmox Password:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
+  while true; do
+    PROXMOX_IP=$(whiptail --inputbox "Enter Proxmox IP Address:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
+    PROXMOX_USER=$(whiptail --inputbox "Enter Proxmox Username:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
+    PROXMOX_PASS=$(whiptail --passwordbox "Enter Proxmox Password:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
 
-  if [ -z "$PROXMOX_IP" ] || [ -z "$PROXMOX_USER" ] || [ -z "$PROXMOX_PASS" ]; then
-    error_exit "Proxmox credentials are required."
-  fi
+    if [ -z "$PROXMOX_IP" ] || [ -z "$PROXMOX_USER" ] || [ -z "$PROXMOX_PASS" ]; then
+      error_exit "Proxmox credentials are required."
+    fi
 
-  cat <<EOL > proxmox_credentials.conf
+    log "Testing Proxmox credentials..."
+    if validate_proxmox_credentials; then
+      cat <<EOL > proxmox_credentials.conf
 PROXMOX_IP=$PROXMOX_IP
 PROXMOX_USER=$PROXMOX_USER
 PROXMOX_PASS=$PROXMOX_PASS
 EOL
 
-  whiptail --msgbox "Proxmox credentials saved. Proceeding with the setup." 8 78 --title "Proxmox Setup"
-
-  log "Proxmox credentials initialized."
+      whiptail --msgbox "Proxmox credentials saved. Proceeding with the setup." 8 78 --title "Proxmox Setup"
+      log "Proxmox credentials initialized."
+      break
+    else
+      whiptail --msgbox "Invalid Proxmox credentials. Please try again." 8 78 --title "Error"
+    fi
+  done
 }
 
 update_system_and_install_dependencies() {
@@ -49,7 +67,7 @@ update_system_and_install_dependencies() {
   log "Updating and upgrading the system, and installing required packages..."
 
   sudo apt update && sudo apt upgrade -y && \
-  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv || error_exit "Failed to update and install required packages."
+  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv sshpass || error_exit "Failed to update and install required packages."
 
   log "System update and installation of dependencies completed."
 }
