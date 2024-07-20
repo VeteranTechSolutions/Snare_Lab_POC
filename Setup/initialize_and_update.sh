@@ -8,6 +8,7 @@ log() {
 
 error_exit() {
   log "ERROR: $1"
+  whiptail --msgbox "ERROR: $1" 8 78 --title "Error"
   exit 1
 }
 
@@ -49,7 +50,7 @@ update_system_and_install_dependencies() {
   {
     sudo apt update && sudo apt upgrade -y && \
     sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv
-  } | whiptail --gauge "Updating and upgrading the system, and installing required packages..." 8 78 0
+  } | tee -a $LOGFILE | whiptail --gauge "Updating and upgrading the system, and installing required packages..." 8 78 0
 
   if [ $? -ne 0 ]; then
     error_exit "Failed to update and install required packages."
