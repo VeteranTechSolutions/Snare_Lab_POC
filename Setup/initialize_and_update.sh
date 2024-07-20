@@ -62,7 +62,8 @@ update_system_and_install_dependencies() {
   log "Creating a script to source the virtual environment..."
   cat <<EOL > source_venv.sh
 #!/bin/bash
-cd $PROJECT_ROOT && source venv/bin/activate
+cd $PROJECT_ROOT
+source venv/bin/activate
 ./Setup/create_venv.sh
 EOL
 
