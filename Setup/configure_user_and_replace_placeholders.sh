@@ -19,20 +19,19 @@ source_proxmox_credentials() {
 configure_proxmox_user() {
   log "Configuring Proxmox user and roles..."
 
-  USER_EXISTS=$(sshpass -p "$PROXMOX_PASS" ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "pveum user list | grep -c 'userprovisioner@pve'")
+  USER_EXISTS=$(ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "pveum user list | grep -c 'userprovisioner@pve'")
 
   if [ "$USER_EXISTS" -eq 0 ]; then
     log "Creating Proxmox user and roles..."
-    sshpass -p "$PROXMOX_PASS" ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP << EOF
+    ssh $PROXMOX_USER@$PROXMOX_IP << EOF
 pveum role add provisioner -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
 pveum user add userprovisioner@pve
 pveum aclmod / -user userprovisioner@pve -role provisioner
 pveum user token add userprovisioner@pve provisioner-token --privsep=0
 EOF
-
   fi
 
-  TOKEN=$(sshpass -p "$PROXMOX_PASS" ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "pveum user token list userprovisioner@pve provisioner-token --output-format=json" | jq -r '.[].value')
+  TOKEN=$(ssh $PROXMOX_USER@$PROXMOX_IP "pveum user token list userprovisioner@pve provisioner-token --output-format=json" | jq -r '.[].value')
 
   log "Proxmox API token captured: $TOKEN"
 
