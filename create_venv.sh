@@ -17,16 +17,10 @@ create_venv() {
 
   log "Creating and activating Python virtual environment..."
 
-  {
-    sudo apt install -y python3-venv && \
-    python3 -m venv venv && \
-    echo "source $(pwd)/venv/bin/activate" >> ~/.bashrc && \
-    source $(pwd)/venv/bin/activate
-  } | tee -a $LOGFILE | whiptail --gauge "Creating and activating Python virtual environment..." 8 78 0
-
-  if [ $? -ne 0 ]; then
-    error_exit "Failed to create and activate Python virtual environment."
-  fi
+  sudo apt install -y python3-venv && \
+  python3 -m venv venv && \
+  echo "source $(pwd)/venv/bin/activate" >> ~/.bashrc && \
+  source $(pwd)/venv/bin/activate || error_exit "Failed to create and activate Python virtual environment."
 
   log "Python virtual environment created and activated successfully."
 
