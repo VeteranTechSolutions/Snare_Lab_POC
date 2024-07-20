@@ -8,6 +8,7 @@ log() {
 
 error_exit() {
   log "ERROR: $1"
+  whiptail --msgbox "ERROR: $1" 8 78 --title "Error"
   exit 1
 }
 
@@ -21,7 +22,7 @@ create_venv() {
     python3 -m venv venv && \
     echo "source $(pwd)/venv/bin/activate" >> ~/.bashrc && \
     source $(pwd)/venv/bin/activate
-  } | whiptail --gauge "Creating and activating Python virtual environment..." 8 78 0
+  } | tee -a $LOGFILE | whiptail --gauge "Creating and activating Python virtual environment..." 8 78 0
 
   if [ $? -ne 0 ]; then
     error_exit "Failed to create and activate Python virtual environment."
