@@ -61,8 +61,8 @@ update_system_and_install_dependencies() {
   log "Creating a script to source the virtual environment..."
   cat <<EOL > source_venv.sh
 #!/bin/bash
-source $(pwd)/venv/bin/activate
-../create_venv.sh
+source ../venv/bin/activate
+../Setup/create_venv.sh
 EOL
 
   chmod +x source_venv.sh || error_exit "Failed to make source_venv.sh executable."
