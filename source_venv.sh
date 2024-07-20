@@ -2,7 +2,6 @@
 
 # Navigate to the project root directory
 cd $(dirname $0)
-cd ..
 
 # Activate the virtual environment
 if [ -d "venv" ]; then
@@ -13,4 +12,4 @@ else
 fi
 
 # Call the create_venv.sh script
-./Setup/create_venv.sh
+./create_venv.sh
