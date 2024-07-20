@@ -1,6 +1,7 @@
 #!/bin/bash
 
 LOGFILE=setup.log
+PROJECT_ROOT="Snare_Lab_POC"
 
 log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a $LOGFILE
@@ -61,8 +62,8 @@ update_system_and_install_dependencies() {
   log "Creating a script to source the virtual environment..."
   cat <<EOL > source_venv.sh
 #!/bin/bash
-source ../venv/bin/activate
-../Setup/create_venv.sh
+cd $PROJECT_ROOT && source venv/bin/activate
+./Setup/create_venv.sh
 EOL
 
   chmod +x source_venv.sh || error_exit "Failed to make source_venv.sh executable."
