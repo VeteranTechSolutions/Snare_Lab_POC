@@ -9,16 +9,7 @@ log() {
 
 error_exit() {
   log "ERROR: $1"
-  whiptail --msgbox "ERROR: $1" 8 78 --title "Error"
   exit 1
-}
-
-check_install_whiptail() {
-  if ! command -v whiptail &> /dev/null; then
-    log "whiptail not found, installing..."
-    sudo apt-get update && sudo apt-get install -y whiptail || error_exit "Failed to install whiptail."
-    log "whiptail installed successfully."
-  fi
 }
 
 validate_proxmox_credentials() {
@@ -33,33 +24,27 @@ validate_proxmox_credentials() {
 }
 
 initialize_proxmox_credentials() {
-  check_install_whiptail
+  read -p "Enter Proxmox IP Address: " PROXMOX_IP
+  read -p "Enter Proxmox Username: " PROXMOX_USER
+  read -sp "Enter Proxmox Password: " PROXMOX_PASS
+  echo
 
-  while true; do
-    PROXMOX_IP=$(whiptail --inputbox "Enter Proxmox IP Address:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
-    PROXMOX_USER=$(whiptail --inputbox "Enter Proxmox Username:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
-    PROXMOX_PASS=$(whiptail --passwordbox "Enter Proxmox Password:" 8 78 --title "Proxmox Setup" 3>&1 1>&2 2>&3)
+  if [ -z "$PROXMOX_IP" ] || [ -z "$PROXMOX_USER" ] || [ -z "$PROXMOX_PASS" ]; then
+    error_exit "Proxmox credentials are required."
+  fi
 
-    if [ -z "$PROXMOX_IP" ] || [ -z "$PROXMOX_USER" ] || [ -z "$PROXMOX_PASS" ]; then
-      error_exit "Proxmox credentials are required."
-    fi
-
-    log "Testing Proxmox credentials with IP: $PROXMOX_IP, User: $PROXMOX_USER"
-
-    if validate_proxmox_credentials; then
-      cat <<EOL > proxmox_credentials.conf
+  log "Testing Proxmox credentials..."
+  if validate_proxmox_credentials; then
+    cat <<EOL > proxmox_credentials.conf
 PROXMOX_IP=$PROXMOX_IP
 PROXMOX_USER=$PROXMOX_USER
 PROXMOX_PASS=$PROXMOX_PASS
 EOL
 
-      whiptail --msgbox "Proxmox credentials saved. Proceeding with the setup." 8 78 --title "Proxmox Setup"
-      log "Proxmox credentials initialized."
-      break
-    else
-      whiptail --msgbox "Invalid Proxmox credentials. Please try again." 8 78 --title "Error"
-    fi
-  done
+    log "Proxmox credentials saved and validated successfully."
+  else
+    error_exit "Invalid Proxmox credentials. Exiting."
+  fi
 }
 
 update_system_and_install_dependencies() {
@@ -94,8 +79,6 @@ prepare_project() {
   log "Running source_venv.sh..."
   ./source_venv.sh || error_exit "Failed to run source_venv.sh."
 
-  whiptail --msgbox "System update and installation of dependencies completed. Virtual environment setup completed. Next, running the project scripts." 8 78 --title "Step 1 Complete"
-
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
@@ -103,8 +86,6 @@ prepare_project() {
   #                                                            #
   ##############################################################
   \033[0m"
-
-  # Now you can proceed with the next steps in your setup process
 }
 
 main() {
