@@ -21,6 +21,8 @@ source_env() {
 }
 
 configure_proxmox_users() {
+  echo -e "\n\n####################### Starting Step 3 #######################\n" | tee -a $LOGFILE
+
   log "Configuring Proxmox users and roles..."
 
   read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
@@ -64,8 +66,6 @@ EOF
   #                                                            #
   #    Proxmox users configured successfully.                  #
   #                                                            #
-  #    Replacing placeholders in configuration files...        #
-  #                                                            #
   ##############################################################
   \033[0m"
 }
@@ -87,12 +87,27 @@ replace_placeholders() {
     'mv "$0" "${0/example-terraform.tfvars.txt/terraform.tfvars}"' {} \;
 
   log "Placeholders in configuration files replaced successfully."
+
+  log "Making the next script (install_automation_tools.sh) executable..."
+  chmod +x install_automation_tools.sh || error_exit "Failed to make install_automation_tools.sh executable."
+  log "Next script (install_automation_tools.sh) is now executable."
+
   echo -e "\033[1;32m
   ##############################################################
   #                                                            #
   #    Placeholders replaced successfully.                     #
   #                                                            #
-  #    Run the next step: install_ansible.sh                   #
+  #                     STEP 3 COMPLETE                        #
+  #                                                            #
+  ##############################################################
+  \033[0m"
+
+  echo -e "\033[1;34m
+  ##############################################################
+  #                                                            #
+  #    NEXT STEP: Run the following command:                   #
+  #                                                            #
+  #    ./install_automation_tools.sh                           #
   #                                                            #
   ##############################################################
   \033[0m"
