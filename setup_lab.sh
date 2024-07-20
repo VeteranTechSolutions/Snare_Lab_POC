@@ -23,7 +23,7 @@ check_install_whiptail() {
 
 validate_proxmox_credentials() {
   log "Validating Proxmox credentials..."
-  if ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=5 $PROXMOX_USER@$PROXMOX_IP "echo 2>&1" && [ $? -eq 0 ]; then
+  if sshpass -p "$PROXMOX_PASS" ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=5 $PROXMOX_USER@$PROXMOX_IP "echo 2>&1" && [ $? -eq 0 ]; then
     log "Proxmox credentials validated successfully."
     return 0
   else
@@ -44,7 +44,8 @@ initialize_proxmox_credentials() {
       error_exit "Proxmox credentials are required."
     fi
 
-    log "Testing Proxmox credentials..."
+    log "Testing Proxmox credentials with IP: $PROXMOX_IP, User: $PROXMOX_USER"
+
     if validate_proxmox_credentials; then
       cat <<EOL > proxmox_credentials.conf
 PROXMOX_IP=$PROXMOX_IP
