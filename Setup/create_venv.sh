@@ -18,7 +18,8 @@ create_venv() {
   log "Creating and activating Python virtual environment..."
 
   {
-    cd .. && sudo apt install -y python3-venv && \
+    sudo apt install -y python3-venv && \
+    cd ../Snare_Lab_POC && \
     python3 -m venv venv && \
     echo "source $(pwd)/venv/bin/activate" >> ~/.bashrc && \
     source $(pwd)/venv/bin/activate
