@@ -58,24 +58,30 @@ update_system_and_install_dependencies() {
 
   log "System update and installation of dependencies completed."
 
-  log "Making the next script (create_venv.sh) executable..."
-  chmod +x ../create_venv.sh || error_exit "Failed to make create_venv.sh executable."
-  log "Next script (create_venv.sh) is now executable."
+  log "Creating a script to source the virtual environment..."
+  cat <<EOL > source_venv.sh
+#!/bin/bash
+source $(pwd)/venv/bin/activate
+../create_venv.sh
+EOL
 
-  whiptail --msgbox "System update and installation of dependencies completed. Next, running ./create_venv.sh" 8 78 --title "Step 1 Complete"
+  chmod +x source_venv.sh || error_exit "Failed to make source_venv.sh executable."
+  log "source_venv.sh script created and made executable."
+
+  whiptail --msgbox "System update and installation of dependencies completed. Next, running ./source_venv.sh" 8 78 --title "Step 1 Complete"
 
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
   #    NEXT STEP: Running the following command:               #
   #                                                            #
-  #    ./create_venv.sh                                        #
+  #    ./source_venv.sh                                        #
   #                                                            #
   ##############################################################
   \033[0m"
 
   # Run the next script
-  ../create_venv.sh
+  ./source_venv.sh
 }
 
 main() {
