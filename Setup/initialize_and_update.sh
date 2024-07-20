@@ -45,25 +45,36 @@ update_system_and_install_dependencies() {
   echo -e "\n\n####################### Starting Step 1 #######################\n" | tee -a $LOGFILE
 
   log "Updating and upgrading the system, and installing required packages..."
-  sudo apt update && sudo apt upgrade -y || error_exit "System update and upgrade failed."
-  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv || error_exit "Failed to install required packages."
+
+  {
+    sudo apt update && sudo apt upgrade -y && \
+    sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv
+  } | whiptail --gauge "Updating and upgrading the system, and installing required packages..." 8 78 0
+
+  if [ $? -ne 0 ]; then
+    error_exit "Failed to update and install required packages."
+  fi
+
   log "System update and installation of dependencies completed."
 
   log "Making the next script (create_venv.sh) executable..."
-  chmod +x create_venv.sh || error_exit "Failed to make create_venv.sh executable."
+  chmod +x ../create_venv.sh || error_exit "Failed to make create_venv.sh executable."
   log "Next script (create_venv.sh) is now executable."
 
-  whiptail --msgbox "System update and installation of dependencies completed. Next, run ./create_venv.sh" 8 78 --title "Step 1 Complete"
+  whiptail --msgbox "System update and installation of dependencies completed. Next, running ./create_venv.sh" 8 78 --title "Step 1 Complete"
 
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
-  #    NEXT STEP: Run the following command:                   #
+  #    NEXT STEP: Running the following command:               #
   #                                                            #
   #    ./create_venv.sh                                        #
   #                                                            #
   ##############################################################
   \033[0m"
+
+  # Run the next script
+  ../create_venv.sh
 }
 
 main() {
