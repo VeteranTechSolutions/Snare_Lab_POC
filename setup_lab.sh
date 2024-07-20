@@ -25,11 +25,6 @@ initialize_proxmox_credentials() {
   read -sp "Enter Proxmox Password: " PROXMOX_PASS
   echo
 
-  if [ -z "$PROXMOX_IP" ] || [ -z "$PROXMOX_USER" ] || [ -z "$PROXMOX_PASS" ]; then
-    echo "Proxmox credentials are required. Exiting..."
-    exit 1
-  fi
-
   cat <<EOL > proxmox_credentials.conf
 PROXMOX_IP=$PROXMOX_IP
 PROXMOX_USER=$PROXMOX_USER
