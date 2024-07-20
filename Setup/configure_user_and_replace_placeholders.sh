@@ -13,9 +13,9 @@ error_exit() {
 }
 
 source_env() {
-  if [ -f proxmox_credentials.conf ]; then
+  if [ -f ../proxmox_credentials.conf ]; then
     log "Sourcing proxmox_credentials.conf file..."
-    source proxmox_credentials.conf
+    source ../proxmox_credentials.conf
   else
     error_exit "proxmox_credentials.conf file not found! Exiting..."
   fi
@@ -26,7 +26,7 @@ configure_proxmox_users() {
 
   log "Checking if Proxmox user already exists..."
 
-  USER_EXISTS=$(sshpass -p $PROXMOX_PASS ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "pveum user list | grep -c 'userprovisioner@pve'")
+  USER_EXISTS=$(ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "pveum user list | grep -c 'userprovisioner@pve'")
 
   if [ "$USER_EXISTS" -eq "1" ]; then
     log "User already exists. Prompting for existing API token."
@@ -44,7 +44,7 @@ configure_proxmox_users() {
   else
     log "Configuring Proxmox users and roles..."
 
-    sshpass -p $PROXMOX_PASS ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP << EOF > /tmp/proxmox_output.log 2>&1
+    ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP << EOF > /tmp/proxmox_output.log 2>&1
 pveum role add provisioner -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
 pveum user add userprovisioner@pve
 pveum aclmod / -user userprovisioner@pve -role provisioner
