@@ -18,7 +18,7 @@ create_venv() {
   log "Creating and activating Python virtual environment..."
 
   {
-    sudo apt install -y python3-venv && \
+    cd .. && sudo apt install -y python3-venv && \
     python3 -m venv venv && \
     echo "source $(pwd)/venv/bin/activate" >> ~/.bashrc && \
     source $(pwd)/venv/bin/activate
@@ -31,23 +31,23 @@ create_venv() {
   log "Python virtual environment created and activated successfully."
 
   log "Making the next script (configure_user_and_replace_placeholders.sh) executable..."
-  chmod +x ../configure_user_and_replace_placeholders.sh || error_exit "Failed to make configure_user_and_replace_placeholders.sh executable."
+  chmod +x Setup/configure_user_and_replace_placeholders.sh || error_exit "Failed to make configure_user_and_replace_placeholders.sh executable."
   log "Next script (configure_user_and_replace_placeholders.sh) is now executable."
 
-  whiptail --msgbox "Python virtual environment created and activated successfully. Next, running ./configure_user_and_replace_placeholders.sh" 8 78 --title "Step 2 Complete"
+  whiptail --msgbox "Python virtual environment created and activated successfully. Next, running ./Setup/configure_user_and_replace_placeholders.sh" 8 78 --title "Step 2 Complete"
 
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
   #    NEXT STEP: Running the following command:               #
   #                                                            #
-  #    ./configure_user_and_replace_placeholders.sh            #
+  #    ./Setup/configure_user_and_replace_placeholders.sh      #
   #                                                            #
   ##############################################################
   \033[0m"
 
   # Run the next script
-  ../configure_user_and_replace_placeholders.sh
+  ./Setup/configure_user_and_replace_placeholders.sh
 }
 
 main() {
