@@ -24,34 +24,22 @@ update_system_and_install_dependencies() {
 }
 
 initialize_proxmox_credentials() {
-  while true; do
-    read -p "Enter Proxmox IP Address: " PROXMOX_IP
-    read -p "Enter Proxmox Username: " PROXMOX_USER
-    read -sp "Enter Proxmox Password: " PROXMOX_PASS
-    echo
+  read -p "Enter Proxmox IP Address: " PROXMOX_IP
+  read -p "Enter Proxmox Username: " PROXMOX_USER
+  read -sp "Enter Proxmox Password: " PROXMOX_PASS
+  echo
 
-    if [ -z "$PROXMOX_IP" ] || [ -z "$PROXMOX_USER" ] || [ -z "$PROXMOX_PASS" ]; then
-      echo "Proxmox credentials are required."
-      continue
-    fi
+  if [ -z "$PROXMOX_IP" ] || [ -z "$PROXMOX_USER" ] || [ -z "$PROXMOX_PASS" ]; then
+    error_exit "Proxmox credentials are required."
+  fi
 
-    echo -e "\nProxmox IP Address: $PROXMOX_IP"
-    echo "Proxmox Username: $PROXMOX_USER"
-    echo -e "Proxmox Password: ********\n"
-
-    read -p "Are these credentials correct? (yes/no): " CONFIRM
-    if [[ "$CONFIRM" == "yes" ]]; then
-      cat <<EOL > proxmox_credentials.conf
+  cat <<EOL > proxmox_credentials.conf
 PROXMOX_IP=$PROXMOX_IP
 PROXMOX_USER=$PROXMOX_USER
 PROXMOX_PASS=$PROXMOX_PASS
 EOL
-      log "Proxmox credentials saved."
-      break
-    else
-      echo "Please re-enter the Proxmox credentials."
-    fi
-  done
+
+  log "Proxmox credentials saved."
 }
 
 prepare_project() {
