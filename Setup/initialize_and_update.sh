@@ -59,16 +59,8 @@ update_system_and_install_dependencies() {
 
   log "System update and installation of dependencies completed."
 
-  log "Creating a script to source the virtual environment..."
-  cat <<EOL > source_venv.sh
-#!/bin/bash
-cd $PROJECT_ROOT
-source venv/bin/activate
-./Setup/create_venv.sh
-EOL
-
-  chmod +x source_venv.sh || error_exit "Failed to make source_venv.sh executable."
-  log "source_venv.sh script created and made executable."
+  log "Changing to the project root directory..."
+  cd $PROJECT_ROOT || error_exit "Failed to change to the project root directory."
 
   whiptail --msgbox "System update and installation of dependencies completed. Next, running ./source_venv.sh" 8 78 --title "Step 1 Complete"
 
