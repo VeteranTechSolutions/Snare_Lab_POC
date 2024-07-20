@@ -1,19 +1,19 @@
 #!/bin/bash
 
 LOGFILE=setup.log
-PROJECT_ROOT="Snare_Lab_POC"
+PROJECT_ROOT=$(pwd)
 
 log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a $LOGFILE
 }
 
 update_system_and_install_dependencies() {
-  echo -e "\n\n####################### Starting Step 1 #######################\n" | tee -a $LOGFILE
+  echo -e "\n\n####################### Starting Setup #######################\n" | tee -a $LOGFILE
 
   log "Updating and upgrading the system, and installing required packages..."
 
   sudo apt update && sudo apt upgrade -y
-  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv
+  sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils whiptail pv sshpass
 
   log "System update and installation of dependencies completed."
 }
@@ -35,12 +35,6 @@ EOL
 }
 
 prepare_project() {
-  log "Cloning the Git repository..."
-  git clone https://github.com/VeteranTechSolutions/Snare_Lab_POC.git
-
-  log "Changing to the project root directory..."
-  cd Snare_Lab_POC
-
   log "Making create_venv.sh and source_venv.sh executable..."
   chmod +x create_venv.sh
   chmod +x source_venv.sh
