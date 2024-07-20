@@ -8,15 +8,25 @@ log() {
 
 error_exit() {
   log "ERROR: $1"
+  whiptail --msgbox "ERROR: $1" 8 78 --title "Error"
   exit 1
 }
 
 source_env() {
-  if [ -f .env ]; then
-    log "Sourcing .env file..."
-    export $(grep -v '^#' .env | xargs)
+  if [ -f ../proxmox_credentials.conf ]; then
+    log "Sourcing Proxmox credentials..."
+    source ../proxmox_credentials.conf
   else
-    error_exit ".env file not found! Exiting..."
+    error_exit "Proxmox credentials not found! Exiting..."
+  fi
+}
+
+validate_token() {
+  local token=$1
+  if [[ ${#token} -eq 36 ]]; then
+    return 0
+  else
+    return 1
   fi
 }
 
@@ -25,13 +35,14 @@ configure_proxmox_users() {
 
   log "Configuring Proxmox users and roles..."
 
-  read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
-  read -p "Enter Proxmox User Username: " PROXMOX_USER
-  read -sp "Enter Proxmox User Password: " PROXMOX_PASS
-  echo
+  source_env
 
-  log "Executing SSH commands on Proxmox server..."
-  ssh $PROXMOX_USER@$PROXMOX_USER_IP << EOF >> $LOGFILE 2>&1
+  EXISTING_USER=$(ssh $PROXMOX_USER@$PROXMOX_IP "pveum user list | grep -w 'userprovisioner@pve'")
+
+  if [ -z "$EXISTING_USER" ]; then
+    log "User does not exist. Creating user and roles..."
+
+    ssh $PROXMOX_USER@$PROXMOX_IP << EOF
 pveum role add provisioner -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
 pveum user add userprovisioner@pve
 pveum aclmod / -user userprovisioner@pve -role provisioner
@@ -41,77 +52,53 @@ pveum user token list userprovisioner@pve provisioner-token --output-format=json
 hostname
 EOF
 
-  if [ $? -ne 0 ]; then
-    error_exit "Failed to execute SSH commands on Proxmox server."
+    TOKEN=$(ssh $PROXMOX_USER@$PROXMOX_IP "pveum user token list userprovisioner@pve provisioner-token --output-format=json | jq -r '.[0].value'")
+
+    if validate_token "$TOKEN"; then
+      log "Token generated and validated."
+    else
+      error_exit "Invalid token generated."
+    fi
+
+  else
+    log "User already exists. Prompting for token..."
+
+    TOKEN=$(whiptail --inputbox "Enter the existing token for userprovisioner@pve:" 8 78 --title "Proxmox Token" 3>&1 1>&2 2>&3)
+
+    if validate_token "$TOKEN"; then
+      log "Token validated."
+    else
+      error_exit "Invalid token entered."
+    fi
   fi
 
-  log "SSH command output logged to $LOGFILE"
+  echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > ../proxmox_token.conf
+  echo "PROXMOX_API_TOKEN=$TOKEN" >> ../proxmox_token.conf
 
-  # Capture the API token value from the log file using regex
-  API_TOKEN=$(grep -oP '│ value\s*│\s*\K[a-f0-9\-]{36}' $LOGFILE)
+  whiptail --msgbox "Proxmox users and roles configured successfully. Next, running ./replace_placeholders.sh" 8 78 --title "Step 3 Complete"
 
-  if [ -z "$API_TOKEN" ]; then
-    error_exit "Failed to capture API token."
-  fi
+  log "Proxmox users and roles configured successfully."
 
-  echo "Creating .env file..."
-  echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > .env
-  echo "PROXMOX_API_TOKEN=$API_TOKEN" >> .env
-  echo "PROXMOX_NODE_IP=$PROXMOX_USER_IP" >> .env
-  echo "PROXMOX_NODE_NAME=pve" >> .env
-  log ".env file created successfully with the captured API token."
-
-  echo -e "\033[1;32m
-  ##############################################################
-  #                                                            #
-  #    Proxmox users configured successfully.                  #
-  #                                                            #
-  ##############################################################
-  \033[0m"
-}
-
-replace_placeholders() {
-  source_env
-
-  log "Replacing placeholders in configuration files..."
-  find . -type f ! -name "requirements.sh" -exec sed -i \
-    -e "s/<proxmox_api_id>/$PROXMOX_API_ID/g" \
-    -e "s/<proxmox_api_token>/$PROXMOX_API_TOKEN/g" \
-    -e "s/<proxmox_node_ip>/$PROXMOX_NODE_IP/g" \
-    -e "s/<proxmox_node_name>/$PROXMOX_NODE_NAME/g" {} +
-
-  find ./packer -type f -name "example.auto.pkrvars.hcl.txt" -exec bash -c \
-    'mv "$0" "${0/example.auto.pkrvars.hcl.txt/value.auto.pkrvars.hcl}"' {} \;
-
-  find ./terraform -type f -name "example-terraform.tfvars.txt" -exec bash -c \
-    'mv "$0" "${0/example-terraform.tfvars.txt/terraform.tfvars}"' {} \;
-
-  log "Placeholders in configuration files replaced successfully."
-
-  log "Making the next script (install_automation_tools.sh) executable..."
-  chmod +x install_automation_tools.sh || error_exit "Failed to make install_automation_tools.sh executable."
-  log "Next script (install_automation_tools.sh) is now executable."
-
-  echo -e "\033[1;32m
-  ##############################################################
-  #                                                            #
-  #    Placeholders replaced successfully.                     #
-  #                                                            #
-  #                     STEP 3 COMPLETE                        #
-  #                                                            #
-  ##############################################################
-  \033[0m"
+  log "Making the next script (replace_placeholders.sh) executable..."
+  chmod +x ../replace_placeholders.sh || error_exit "Failed to make replace_placeholders.sh executable."
+  log "Next script (replace_placeholders.sh) is now executable."
 
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
-  #    NEXT STEP: Run the following command:                   #
+  #    NEXT STEP: Running the following command:               #
   #                                                            #
-  #    ./install_automation_tools.sh                           #
+  #    ./replace_placeholders.sh                               #
   #                                                            #
   ##############################################################
   \033[0m"
+
+  # Run the next script
+  ../replace_placeholders.sh
 }
 
-configure_proxmox_users
-replace_placeholders
+main() {
+  configure_proxmox_users
+}
+
+main
