@@ -88,16 +88,12 @@ replace_placeholders() {
 
   log "Placeholders in configuration files replaced successfully."
 
-  log "Making the next script (install_automation_tools.sh) executable..."
-  chmod +x install_automation_tools.sh || error_exit "Failed to make install_automation_tools.sh executable."
-  log "Next script (install_automation_tools.sh) is now executable."
-
   echo -e "\033[1;32m
   ##############################################################
   #                                                            #
   #    Placeholders replaced successfully.                     #
   #                                                            #
-  #                     STEP 3 COMPLETE                        #
+  #                     STEP 2 COMPLETE                        #
   #                                                            #
   ##############################################################
   \033[0m"
