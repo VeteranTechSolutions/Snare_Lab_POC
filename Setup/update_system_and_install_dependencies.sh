@@ -33,7 +33,7 @@ update_system_and_install_dependencies() {
   #                                                            #
   #    System updated and dependencies installed successfully  #
   #                                                            #
-  #                     STEP 1 COMPLETE                        #
+  #                     STEP 2 COMPLETE                        #
   #                                                            #
   ##############################################################
   \033[0m"
