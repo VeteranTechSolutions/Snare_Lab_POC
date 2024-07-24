@@ -12,7 +12,7 @@ error_exit() {
 }
 
 update_system_and_install_dependencies() {
-  echo -e "\n\n####################### Starting Step 1 #######################\n" | tee -a $LOGFILE
+  echo -e "\n\n####################### Starting Step 2 #######################\n" | tee -a $LOGFILE
   
   log "Starting system update and upgrade..."
   sudo apt update && sudo apt upgrade -y || error_exit "System update and upgrade failed."
@@ -23,10 +23,6 @@ update_system_and_install_dependencies() {
   log "Installing required packages: git, gpg, nano, tmux, curl, gnupg, software-properties-common, mkisofs, python3-venv, python3, python3-pip, unzip, mono-complete, coreutils..."
   sudo apt install -y git gpg nano tmux curl gnupg software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils || error_exit "Failed to install required packages."
   log "Installation of required packages completed."
-
-  log "Making the next script (create_venv.sh) executable..."
-  chmod +x create_venv.sh || error_exit "Failed to make create_venv.sh executable."
-  log "Next script (create_venv.sh) is now executable."
 
   echo -e "\033[1;32m
   ##############################################################
@@ -49,4 +45,11 @@ update_system_and_install_dependencies() {
   \033[0m"
 }
 
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+  cd ~/Git_Project/Snare_Lab_POC/Setup
+  ./configure_user_and_replace_placeholders.sh
+}
+
 update_system_and_install_dependencies
+run_next_script
