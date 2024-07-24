@@ -24,8 +24,9 @@ update_system_and_install_dependencies() {
 }
 
 log "Cloning Snare_Lab_POC repository..."
+mkdir ~/Git_Project
+cd ~/Git_Project
 git clone https://github.com/VeteranTechSolutions/Snare_Lab_POC.git
-cd Snare_Lab_POC
 
 log "Installing python3-venv..."
 sudo apt install -y python3-venv || error_exit "Failed to install python3-venv."
@@ -37,14 +38,14 @@ log "Python virtual environment created successfully."
 
 prepare_project() {
   log "Making project scripts executable..."
-  chmod +x ./create_venv.sh
-  chmod +x ./Setup/update_system_and_install_dependencies.sh
-  chmod +x ./Setup/configure_user_and_replace_placeholders.sh
-  chmod +x ./Setup/download_iso_files.sh
-  chmod +x ./Setup/download_snare_files.sh
-  chmod +x ./Setup/install_automation_tools.sh
-  chmod +x ./Setup/reassemble_iso_files.sh
-  chmod +x ./Setup/upload_iso.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/create_venv.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/update_system_and_install_dependencies.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/configure_user_and_replace_placeholders.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/download_iso_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/download_snare_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/install_automation_tools.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/reassemble_iso_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/upload_iso.sh
 
   echo -e "\033[1;34m
   ########################################################
@@ -71,8 +72,9 @@ create_source_env_script() {
   log "Creating source_env.sh script..."
   cat <<EOF > source_env.sh
 #!/bin/bash
-cd ..
+cd ~/Git_Project
 source Snare_POC_VENV/bin/activate
+~/Git_Project/Snare_Lab_POC/
 EOF
   chmod +x source_env.sh
   log "source_env.sh script created successfully."
