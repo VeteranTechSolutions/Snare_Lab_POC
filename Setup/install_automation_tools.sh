@@ -87,22 +87,29 @@ install_ansible_collections() {
   #                                                            #
   ##############################################################
   \033[0m"
+
+   echo -e "\033[1;34m
+  ##############################################################
+  #                                                            #
+  #    NEXT STEP: Run the following command:                   #
+  #                                                            #
+  #    ./download_lab_ISO_and_snare_products.sh                #
+  #                                                            #
+  ##############################################################
+  \033[0m"
 }
+
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+  cd ~/Git_Project/Snare_Lab_POC/Setup
+  ./configure_user_and_replace_placeholders.sh
+}
+
 
 install_ansible
 install_packer_and_terraform
 install_ansible_collections
+run_next_script
 
-log "Making the next script (download_lab_ISO_and_snare_products.sh) executable..."
-chmod +x download_lab_ISO_and_snare_products.sh || error_exit "Failed to make download_lab_ISO_and_snare_products.sh executable."
-log "Next script (download_lab_ISO_and_snare_products.sh) is now executable."
 
-echo -e "\033[1;34m
-##############################################################
-#                                                            #
-#    NEXT STEP: Run the following command:                   #
-#                                                            #
-#    ./download_lab_ISO_and_snare_products.sh                #
-#                                                            #
-##############################################################
-\033[0m"
+
