@@ -55,35 +55,23 @@ prepare_project() {
   \033[0m"
 
   echo -e "\033[1;34m
-  ##############################################################
-  #                                                            #
-  #    NEXT STEP: Run the following commands:                  #
-  #                                                            #
-  #    cd ..                                                   #
-  #    source Snare_POC_VENV/bin/activate                      #
-  #    ./Snare_Lab_POC/Setup/configure_user_and_replace_placeholders.sh  #
-  #                                                            #
-  ##############################################################
+  ########################################################################################################################################################
+  #                                                                                                                                                      #
+  #                                                            NEXT STEP: Run the following commands:                                                    #
+  #                                                                                                                                                      #
+  #   cd ~/Git_Project && source Snare_POC_VENV/bin/activate && cd ~/Git_Project/Snare_Lab_POC/Setup && ./configure_user_and_replace_placeholders.sh     #
+                                                                                                                                                         #
+  #                                                                                                                                                      #
+  #                                                                                                                                                      #
+  #                                                                                                                                                      #
+  ########################################################################################################################################################
   \033[0m"
 }
 
-create_source_env_script() {
-  log "Creating source_env.sh script..."
-  cat <<EOF > source_env.sh
-#!/bin/bash
-source ~/Git_Project/Snare_POC_VENV/bin/activate
-cd  ~/Git_Project/Snare_Lab_POC
-EOF
-  chmod +x ~/Git_Project/source_env.sh
-  log "source_env.sh script created successfully."
-  cd ~/Git_Project/
-  ./source_env.sh
-}
 
 main() {
   update_system_and_install_dependencies
   prepare_project
-  create_source_env_script
 }
 
 main
