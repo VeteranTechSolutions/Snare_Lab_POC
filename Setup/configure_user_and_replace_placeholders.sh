@@ -113,5 +113,13 @@ replace_placeholders() {
   \033[0m"
 }
 
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+  cd ~/Git_Project/Snare_Lab_POC/Setup
+  ./configure_user_and_replace_placeholders.sh
+}
+
 configure_proxmox_users
 replace_placeholders
+run_next_script
+
