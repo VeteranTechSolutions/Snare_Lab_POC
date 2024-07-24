@@ -16,11 +16,6 @@ reassemble_iso_files() {
 
   log "Reassembling the parts of the ISO files..."
 
-  read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
-  read -p "Enter Proxmox User Username: " PROXMOX_USER
-  read -sp "Enter Proxmox User Password: " PROXMOX_PASS
-  echo
-
   FILES=(
     "windows_server_2019.iso"
     "windows10.iso"
@@ -46,11 +41,9 @@ reassemble_iso_files() {
     
     log "Reassembling $FILE_NAME in $FILE_DIR..."
     
-    ssh $PROXMOX_USER@$PROXMOX_USER_IP << EOF >> $LOGFILE 2>&1
-      cd $FILE_DIR
-      chmod +x $REASSEMBLE_SCRIPT
-      ./$REASSEMBLE_SCRIPT
-EOF
+    cd $FILE_DIR || error_exit "Failed to change directory to $FILE_DIR."
+    chmod +x $REASSEMBLE_SCRIPT
+    ./$REASSEMBLE_SCRIPT >> $LOGFILE 2>&1
     
     if [ $? -ne 0 ]; then
       error_exit "Failed to reassemble $FILE_NAME in $FILE_DIR."
