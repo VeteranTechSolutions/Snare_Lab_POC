@@ -18,7 +18,6 @@ download_iso_files() {
 
   read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
   read -p "Enter Proxmox User Username: " PROXMOX_USER
-  read -sp "Enter Proxmox User Password: " PROXMOX_PASS
   echo
 
   FILES=(
@@ -106,10 +105,6 @@ EOF
   ##############################################################
   \033[0m"
 
-  log "Making the next script (download_snare_files.sh) executable..."
-  chmod +x download_snare_files.sh || error_exit "Failed to make download_snare_files.sh executable."
-  log "Next script (download_snare_files.sh) is now executable."
-
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
@@ -121,4 +116,12 @@ EOF
   \033[0m"
 }
 
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+  cd ~/Git_Project/Snare_Lab_POC/Setup
+  ./download_snare_files.sh
+}
+
+
 download_iso_files
+run_next_script
