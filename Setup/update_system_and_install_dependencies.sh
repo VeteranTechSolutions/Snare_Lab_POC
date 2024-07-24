@@ -43,7 +43,7 @@ update_system_and_install_dependencies() {
   #                                                            #
   #    NEXT STEP: Run the following command:                   #
   #                                                            #
-  #    ./create_venv.sh                                        #
+  #    ./configure_user_and_replace_placeholders.sh                                       #
   #                                                            #
   ##############################################################
   \033[0m"
