@@ -59,7 +59,7 @@ prepare_project() {
   #                                                                                                                                                      #
   #                                                            NEXT STEP: Run the following commands:                                                    #
   #                                                                                                                                                      #
-  #   cd ~/Git_Project && source Snare_POC_VENV/bin/activate && cd ~/Git_Project/Snare_Lab_POC/Setup && ./configure_user_and_replace_placeholders.sh     #
+  #   cd ~/Git_Project && source Snare_POC_VENV/bin/activate && cd ~/Git_Project/Snare_Lab_POC/Setup && ./update_system_and_install_dependencies.sh      #
                                                                                                                                                          #
   #                                                                                                                                                      #
   #                                                                                                                                                      #
