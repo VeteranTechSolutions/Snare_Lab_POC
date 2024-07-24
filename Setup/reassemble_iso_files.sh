@@ -6,63 +6,78 @@ log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a $LOGFILE
 }
 
-reassemble_iso_files() {
-  log "Reassembling the parts of the ISO files..."
-
-  # Reassemble Windows 10 ISO
-  echo "Reassembling Windows 10 ISO..."
-  cd ansible/downloads/windows_10_ISO
-  cat windows10.iso.part* > windows10.iso
-  shasum -a 256 windows10.iso > reassembled_checksum.txt
-  if diff windows10_original_checksum.txt reassembled_checksum.txt > /dev/null; then
-    log "Windows 10 ISO checksum verification passed."
-  else
-    log "Windows 10 ISO checksum verification failed."
-  fi
-  rm reassembled_checksum.txt
-
-  # Reassemble Windows Server 2019 ISO
-  echo "Reassembling Windows Server 2019 ISO..."
-  cd ../windows_server_2019_ISO
-  cat windows_server_2019.iso.part* > windows_server_2019.iso
-  shasum -a 256 windows_server_2019.iso > reassembled_checksum.txt
-  if diff windows_server_2019_original_checksum.txt reassembled_checksum.txt > /dev/null; then
-    log "Windows Server 2019 ISO checksum verification passed."
-  else
-    log "Windows Server 2019 ISO checksum verification failed."
-  fi
-  rm reassembled_checksum.txt
-
-  # Reassemble Snare Central VMA
-  echo "Reassembling Snare Central VMA..."
-  cd ../snare_central_ISO
-  cat Snare_Central.vma.zst.part* > Snare_Central.vma.zst
-  shasum -a 256 Snare_Central.vma.zst > reassembled_checksum.txt
-  if diff Snare_Central_original_checksum.txt reassembled_checksum.txt > /dev/null; then
-    log "Snare Central VMA checksum verification passed."
-  else
-    log "Snare Central VMA checksum verification failed."
-  fi
-  rm reassembled_checksum.txt
-
-  log "Reassembling of ISO files completed."
+error_exit() {
+  log "ERROR: $1"
+  exit 1
 }
 
-main() {
-  reassemble_iso_files
+reassemble_iso_files() {
+  echo -e "\n\n####################### Starting Step 7 #######################\n" | tee -a $LOGFILE
 
-  echo -e "\033[1;34m
+  log "Reassembling the parts of the ISO files..."
+
+  read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
+  read -p "Enter Proxmox User Username: " PROXMOX_USER
+  read -sp "Enter Proxmox User Password: " PROXMOX_PASS
+  echo
+
+  FILES=(
+    "windows_server_2019.iso"
+    "windows10.iso"
+    "Snare_Central.vma.zst"
+  )
+
+  DIRECTORIES=(
+    "ansible/downloads/windows_server_2019_ISO"
+    "ansible/downloads/windows_10_ISO"
+    "ansible/downloads/snare_central_ISO"
+  )
+
+  REASSEMBLE_SCRIPTS=(
+    "reassemble_windows_server_2019.iso.sh"
+    "reassemble_windows10.iso.sh"
+    "reassemble_Snare_Central.iso.sh"
+  )
+
+  for index in "${!FILES[@]}"; do
+    FILE_NAME=${FILES[$index]}
+    FILE_DIR=${DIRECTORIES[$index]}
+    REASSEMBLE_SCRIPT=${REASSEMBLE_SCRIPTS[$index]}
+    
+    log "Reassembling $FILE_NAME in $FILE_DIR..."
+    
+    ssh $PROXMOX_USER@$PROXMOX_USER_IP << EOF >> $LOGFILE 2>&1
+      cd $FILE_DIR
+      chmod +x $REASSEMBLE_SCRIPT
+      ./$REASSEMBLE_SCRIPT
+EOF
+    
+    if [ $? -ne 0 ]; then
+      error_exit "Failed to reassemble $FILE_NAME in $FILE_DIR."
+    fi
+
+    log "$FILE_NAME reassembled successfully in $FILE_DIR."
+  done
+
+  echo -e "\033[1;32m
   ##############################################################
   #                                                            #
-  #    NEXT STEP: Running the following command:               #
+  #    ISO files reassembled and verified successfully.        #
   #                                                            #
-  #    ./upload_iso_to_proxmox.sh                              #
+  #                     STEP 7 COMPLETE                        #
   #                                                            #
   ##############################################################
   \033[0m"
 
-  # Make the next script executable
-  chmod +x ./upload_iso_to_proxmox.sh
+  echo -e "\033[1;34m
+  ##############################################################
+  #                                                            #
+  #    All steps completed.                                    #
+  #                                                            #
+  #    The setup process is now complete.                      #
+  #                                                            #
+  ##############################################################
+  \033[0m"
 }
 
-main
+reassemble_iso_files
