@@ -29,14 +29,6 @@ create_venv() {
   python3 -m venv venv || error_exit "Failed to create Python virtual environment."
   log "Python virtual environment created successfully."
 
-  log "Updating .bashrc to activate virtual environment on login..."
-  echo "source $(pwd)/venv/bin/activate" >> ~/.bashrc
-  log ".bashrc updated successfully."
-
-  log "Activating Python virtual environment..."
-  source $(pwd)/venv/bin/activate || error_exit "Failed to activate Python virtual environment."
-  log "Python virtual environment activated successfully."
-
   log "Making the next script (configure_user_and_replace_placeholders.sh) executable..."
   chmod +x ./Setup/configure_user_and_replace_placeholders.sh || error_exit "Failed to make configure_user_and_replace_placeholders.sh executable."
   log "Next script (configure_user_and_replace_placeholders.sh) is now executable."
