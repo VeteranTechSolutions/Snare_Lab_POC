@@ -18,7 +18,7 @@ update_system_and_install_dependencies() {
   log "Updating and upgrading the system, and installing required packages..."
 
   sudo apt update && sudo apt upgrade -y
-  sudo apt install -y git python3-venv
+  sudo apt install -y git
 
   log "System update and installation of dependencies completed."
 }
