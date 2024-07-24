@@ -72,10 +72,10 @@ create_source_env_script() {
   log "Creating source_env.sh script..."
   cat <<EOF > source_env.sh
 #!/bin/bash
-cd ~/Git_Project
 source Snare_POC_VENV/bin/activate
 ~/Git_Project/Snare_Lab_POC/
 EOF
+  cd ~/Git_Project
   chmod +x source_env.sh
   log "source_env.sh script created successfully."
 }
