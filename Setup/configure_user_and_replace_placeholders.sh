@@ -93,7 +93,7 @@ replace_placeholders() {
   #                                                            #
   #    Placeholders replaced successfully.                     #
   #                                                            #
-  #                     STEP 2 COMPLETE                        #
+  #                     STEP 3 COMPLETE                        #
   #                                                            #
   ##############################################################
   \033[0m"
