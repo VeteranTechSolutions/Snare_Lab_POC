@@ -102,7 +102,7 @@ install_ansible_collections() {
 run_next_script() {
   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
   cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./configure_user_and_replace_placeholders.sh
+  ./download_iso_files.sh
 }
 
 
