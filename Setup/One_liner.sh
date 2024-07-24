@@ -1,1 +1,1 @@
-bash -c "sudo apt-get update && sudo apt-get install -y curl git && curl -fsSL https://raw.githubusercontent.com/VeteranTechSolutions/Snare_Lab_POC/main/setup_lab.sh | bash"
+bash -c "sudo apt-get update && sudo apt-get install -y curl && curl -L -o prepare_project.sh https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/prepare_project.sh && chmod +x prepare_project.sh && ./prepare_project.sh"
