@@ -38,7 +38,7 @@ create_venv() {
   log "Python virtual environment activated successfully."
 
   log "Making the next script (configure_user_and_replace_placeholders.sh) executable..."
-  chmod +x configure_user_and_replace_placeholders.sh || error_exit "Failed to make configure_user_and_replace_placeholders.sh executable."
+  chmod +x ./Setup/configure_user_and_replace_placeholders.sh || error_exit "Failed to make configure_user_and_replace_placeholders.sh executable."
   log "Next script (configure_user_and_replace_placeholders.sh) is now executable."
 
   echo -e "\033[1;32m
