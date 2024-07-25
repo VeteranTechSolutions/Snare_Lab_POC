@@ -19,14 +19,15 @@ get_proxmox_credentials() {
   read -s -p "Enter Proxmox Password: " PROXMOX_PASSWORD
   echo
 
-  # Save credentials to a local variable file
-  cat <<EOL > ~/Git_Project/Snare_Lab_POC/SSHENV
+  # Save credentials to a specified location
+  SSHENV_PATH=~/Git_Project/Snare_Lab_POC/SSHENV
+  cat <<EOL > $SSHENV_PATH
 export PROXMOX_IP="$PROXMOX_IP"
 export PROXMOX_USER="$PROXMOX_USER"
 export PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
 EOL
 
-  log "Proxmox credentials saved to SSHENV"
+  log "Proxmox credentials saved to $SSHENV_PATH"
 }
 
 run_next_script() {
