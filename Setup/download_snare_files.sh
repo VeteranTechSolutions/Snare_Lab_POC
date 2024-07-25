@@ -14,12 +14,7 @@ error_exit() {
 download_snare_files() {
   echo -e "\n\n####################### Starting Step 6 #######################\n" | tee -a $LOGFILE
 
-  log "Downloading Snare files to Proxmox server..."
-
-  read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
-  read -p "Enter Proxmox User Username: " PROXMOX_USER
-  read -sp "Enter Proxmox User Password: " PROXMOX_PASS
-  echo
+  log "Downloading Snare files locally..."
 
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Ubuntu-22-Agent-v5.8.1-1-x64.deb"
@@ -51,29 +46,33 @@ download_snare_files() {
     "SnareReflector-Windows-x64-v2.5.1.msi"
   )
 
-  ssh $PROXMOX_USER@$PROXMOX_USER_IP << EOF >> $LOGFILE 2>&1
-    mkdir -p ansible/downloads/snareproducts
-EOF
+  DIRECTORY="ansible/downloads/snareproducts"
+
+  mkdir -p "$DIRECTORY"
 
   if [ $? -ne 0 ]; then
-    error_exit "Failed to create directory on Proxmox server."
+    error_exit "Failed to create directory locally."
   fi
 
-  log "Directory created on Proxmox server."
+  log "Directory created locally."
 
   for index in "${!FILES[@]}"; do
     FILE_URL=${FILES[$index]}
     FILE_NAME=${FILENAMES[$index]}
-    log "Downloading $FILE_NAME from $FILE_URL..."
+    log "Downloading $FILE_NAME from $FILE_URL to $DIRECTORY..."
 
-    ssh $PROXMOX_USER@$PROXMOX_USER_IP "cd ansible/downloads/snareproducts && if [ ! -f $FILE_NAME ]; then wget -O $FILE_NAME $FILE_URL && [[ \$FILE_NAME == *.txt ]] && mv \$FILE_NAME \${FILE_NAME%.txt}; fi" || error_exit "Failed to initiate download of $FILE_NAME."
-    log "$FILE_NAME download initiated."
+    if [ ! -f "$DIRECTORY/$FILE_NAME" ]; then
+      wget -O "$DIRECTORY/$FILE_NAME" "$FILE_URL" || error_exit "Failed to download $FILE_NAME."
+      log "$FILE_NAME downloaded successfully."
+    else
+      log "$FILE_NAME already exists. Skipping download."
+    fi
   done
 
   echo -e "\033[1;32m
   ##############################################################
   #                                                            #
-  #    Snare files download initiated successfully.            #
+  #    Snare files downloaded successfully.                    #
   #                                                            #
   #                     STEP 6 COMPLETE                        #
   #                                                            #
