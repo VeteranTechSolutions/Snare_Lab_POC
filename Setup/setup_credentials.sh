@@ -16,8 +16,9 @@ get_proxmox_credentials() {
 
   read -p "Enter Proxmox IP: " PROXMOX_IP
   read -p "Enter Proxmox User: " PROXMOX_USER
-  read -s -p "Enter Proxmox Password: " PROXMOX_PASSWORD
   read -p "Enter Proxmox Node Name: " PROXMOX_NODE_NAME
+  read -s -p "Enter Proxmox Password: " PROXMOX_PASSWORD
+  
   echo
 
   # Save credentials to a specified location
@@ -25,8 +26,9 @@ get_proxmox_credentials() {
   cat <<EOL > $SSHENV_PATH
 export PROXMOX_IP="$PROXMOX_IP"
 export PROXMOX_USER="$PROXMOX_USER"
+export PROXMOX_NODE_NAME="$PROXMOX_NODE_NAME"
 export PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
-export PROXMOX_PASSWORD="$PROXMOX_NODE_NAME"
+
 EOL
 
   log "Proxmox credentials saved to $SSHENV_PATH"
