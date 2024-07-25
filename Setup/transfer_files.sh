@@ -47,6 +47,7 @@ transfer_files() {
     "~/Git_Project/Snare_Lab_POC/ansible/images/ubuntu_22_iso/ubuntu-22.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
+    "~/Git_Project/Snare_Lab_POC/Setup/restore_sc.sh"
   )
 
   REMOTE_PATHS=(
@@ -55,6 +56,8 @@ transfer_files() {
     "/var/lib/vz/template/iso/ubuntu-22.iso"
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
+    "/var/lib/vz/dump/restore_sc.sh
+
   )
 
   ssh_user="$PROXMOX_USER"
@@ -96,15 +99,14 @@ transfer_files() {
   \033[0m"
 }
 
-transfer_restore_script_and_execute() {
-  log "Transferring restore_snare_central.sh to remote server..."
-  sshpass -p "$PROXMOX_PASSWORD" scp -o StrictHostKeyChecking=no restore_snare_central.sh $ssh_user@$PROXMOX_NODE_IP:~ || error_exit "Failed to transfer restore_snare_central.sh"
-
-  log "Executing restore_snare_central.sh on remote server..."
-  sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no "$ssh_user@$PROXMOX_NODE_IP" "chmod +x ~/restore_snare_central.sh && ~/restore_snare_central.sh" || error_exit "Failed to execute restore_snare_central.sh on remote server"
-}
+# Uncomment and modify this section if you have a next script to run
+# run_next_script() {
+#   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_templating.sh"
+#   cd ~/Git_Project/Snare_Lab_POC/packer
+#   ./task_templating.sh
+# }
 
 source_env
 test_ssh_connection
 transfer_files
-transfer_restore_script_and_execute
+# run_next_script
