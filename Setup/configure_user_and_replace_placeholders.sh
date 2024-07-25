@@ -12,11 +12,11 @@ error_exit() {
 }
 
 source_env() {
-  if [ -f .env ]; then
-    log "Sourcing .env file..."
-    export $(grep -v '^#' .env | xargs)
+  if [ -f SSHENV ]; then
+    log "Sourcing SSHENV file..."
+    source SSHENV
   else
-    error_exit ".env file not found! Exiting..."
+    error_exit "SSHENV file not found! Exiting..."
   fi
 }
 
@@ -30,7 +30,7 @@ configure_proxmox_users() {
   echo
 
   log "Executing SSH commands on Proxmox server..."
-  ssh $PROXMOX_USER@$PROXMOX_USER_IP << EOF >> $LOGFILE 2>&1
+  sshpass -p "$PROXMOX_PASSWORD" ssh $PROXMOX_USER@$PROXMOX_IP << EOF >> $LOGFILE 2>&1
 pveum role add provisioner -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
 pveum user add userprovisioner@pve
 pveum aclmod / -user userprovisioner@pve -role provisioner
