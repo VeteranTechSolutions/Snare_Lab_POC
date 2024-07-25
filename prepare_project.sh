@@ -45,7 +45,11 @@ prepare_project() {
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/download_snare_files.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/install_automation_tools.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/reassemble_iso_files.sh 
-  #chmod +x ~/Git_Project/Snare_Lab_POC/Setup/upload_iso.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/transfer_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso/reassemble_windows_10.iso.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/reassemble_windows_server_2019.iso.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/reassemble_snare_central.iso.sh
+  
 
   echo -e "\033[1;34m
   ########################################################
