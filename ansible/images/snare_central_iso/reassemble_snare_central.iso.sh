@@ -26,13 +26,12 @@ rm reassembled_checksum.txt
 
 echo "Done."
 
-#run_next_script() {
- # log "AUTOMATICALLY RUNNING THE NEXT SCRIPT transfer_files.sh"
- # cd ~/Git_Project/Snare_Lab_POC/Setup
- ## ./transfer_files.sh
-#}
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT transfer_files.sh"
+  cd ~/Git_Project/Snare_Lab_POC/Setup
+  ./transfer_files.sh
+}
 
-
-#run_next_script
+run_next_script
 
 
