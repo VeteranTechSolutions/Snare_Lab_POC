@@ -2,15 +2,15 @@
 
 # Reassemble the parts into a single file
 echo "Reassembling the parts..."
-cat Snare_Central.vma.zst.part* > "snare_central.vma.zst"
+cat Snare_Central.vma.zst.part* > "vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
 
 # List the reassembled file to verify
 echo "Reassembled file:"
-ls -lh "snare_central.vma.zst"
+ls -lh "vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
 
 # Generate checksums for the reassembled file
 echo "Generating checksum for the reassembled file..."
-shasum -a 256 "snare_central.vma.zst" > reassembled_checksum.txt
+shasum -a 256 "vzdump-qemu-106-2024_07_17-10_57_18.vma.zst" > reassembled_checksum.txt
 
 # Compare the checksums
 echo "Comparing checksums..."
@@ -26,13 +26,13 @@ rm reassembled_checksum.txt
 
 echo "Done."
 
-run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT transfer_files.sh"
-  cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./transfer_files.sh
-}
+#run_next_script() {
+ # log "AUTOMATICALLY RUNNING THE NEXT SCRIPT transfer_files.sh"
+ # cd ~/Git_Project/Snare_Lab_POC/Setup
+ ## ./transfer_files.sh
+#}
 
 
-run_next_script
+#run_next_script
 
 
