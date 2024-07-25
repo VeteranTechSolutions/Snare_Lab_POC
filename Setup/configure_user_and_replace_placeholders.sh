@@ -79,12 +79,6 @@ replace_placeholders() {
   source_env
 
   log "Replacing placeholders in configuration files..."
-  find . -type f ! -name "requirements.sh" -exec sed -i \
-    -e "s/<proxmox_api_id>/$PROXMOX_API_ID/g" \
-    -e "s/<proxmox_api_token>/$PROXMOX_API_TOKEN/g" \
-    -e "s/<proxmox_node_ip>/$PROXMOX_NODE_IP/g" \
-    -e "s/<proxmox_node_name>/$PROXMOX_NODE_NAME/g" {} +
-
   find ./packer -type f -name "example.auto.pkrvars.hcl.txt" -exec bash -c \
     'mv "$0" "${0/example.auto.pkrvars.hcl.txt/value.auto.pkrvars.hcl}"' {} \;
 
