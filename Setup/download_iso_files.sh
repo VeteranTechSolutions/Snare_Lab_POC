@@ -29,7 +29,6 @@ download_iso_files() {
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows_server_2019.iso.partaa"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows_server_2019.iso.partab"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows_server_2019.iso.partac"
-    
   )
 
   FILENAMES=(
@@ -65,8 +64,12 @@ download_iso_files() {
     log "Downloading $FILE_NAME from $FILE_URL to $FILE_DIR..."
 
     if [ ! -f "$FILE_DIR/$FILE_NAME" ]; then
-      wget -O "$FILE_DIR/$FILE_NAME" "$FILE_URL" || error_exit "Failed to download $FILE_NAME."
-      log "$FILE_NAME downloaded successfully."
+      wget -O "$FILE_DIR/$FILE_NAME" "$FILE_URL"
+      if [ $? -ne 0 ]; then
+        error_exit "Failed to download $FILE_NAME."
+      else
+        log "$FILE_NAME downloaded successfully."
+      fi
     else
       log "$FILE_NAME already exists. Skipping download."
     fi
