@@ -14,7 +14,7 @@ shasum -a 256 "reassembled_windows10.iso" > reassembled_checksum.txt
 
 # Compare the checksums
 echo "Comparing checksums..."
-if diff original_checksum.txt reassembled_checksum.txt > /dev/null; then
+if diff windows_10_original_checksum.txt reassembled_checksum.txt > /dev/null; then
   echo "Checksum verification passed. The files are identical."
 else
   echo "Checksum verification failed. The files are not identical."
