@@ -27,9 +27,9 @@ rm reassembled_checksum.txt
 echo "Done."
 
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows10.iso.sh"
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_ windows_server_2019.iso.sh"
   cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/
-  ./reassemble_ windows_server_2019.iso.sh
+  ./reassemble_windows_server_2019.iso.sh
 }
 
 
