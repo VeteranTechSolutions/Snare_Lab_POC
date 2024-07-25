@@ -71,5 +71,6 @@ transfer_files() {
 #  ./task_templating.sh
 #}
 
+source_env
 transfer_files
 #run_next_script
