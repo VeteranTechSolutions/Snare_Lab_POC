@@ -100,7 +100,7 @@ install_ansible_collections() {
 }
 
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT download_iso_files.sh"
   cd ~/Git_Project/Snare_Lab_POC/Setup
   ./download_iso_files.sh
 }
