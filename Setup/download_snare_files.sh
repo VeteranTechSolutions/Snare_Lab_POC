@@ -83,7 +83,7 @@ download_snare_files() {
   #                                                            #
   #    NEXT STEP: Run the following command:                   #
   #                                                            #
-  #    ./reassemble_iso_files.sh                               #
+  #    ./reassemble_windows_10.iso.sh                              #
   #                                                            #
   ##############################################################
   \033[0m"
