@@ -15,6 +15,7 @@ reassemble_iso_files() {
   echo -e "\n\n####################### Starting Step 7 #######################\n" | tee -a $LOGFILE
 
   log "Reassembling the parts of the ISO files..."
+  mkdir ~/Git_Project/Snare_Lab_POC/ansible/images
 
   FILES=(
     "windows_server_2019.iso"
@@ -23,9 +24,9 @@ reassemble_iso_files() {
   )
 
   DIRECTORIES=(
-    "ansible/downloads/windows_server_2019_ISO"
-    "ansible/downloads/windows_10_ISO"
-    "ansible/downloads/snare_central_ISO"
+    "windows_server_2019_ISO"
+    "windows_10_ISO"
+    "snare_central_ISO"
   )
 
   REASSEMBLE_SCRIPTS=(
