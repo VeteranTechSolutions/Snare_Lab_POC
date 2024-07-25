@@ -21,6 +21,15 @@ source_env() {
   fi
 }
 
+test_ssh_connection() {
+  log "Testing SSH connection to Proxmox server..."
+  sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "echo 'SSH connection successful'" >> $LOGFILE 2>&1
+  if [ $? -ne 0 ]; then
+    error_exit "SSH connection to Proxmox server failed. Please check the credentials and network connectivity."
+  fi
+  log "SSH connection to Proxmox server successful."
+}
+
 transfer_files() {
   echo -e "\n\n####################### Starting File Transfer #######################\n" | tee -a $LOGFILE
 
@@ -72,5 +81,6 @@ transfer_files() {
 #}
 
 source_env
+test_ssh_connection
 transfer_files
 #run_next_script
