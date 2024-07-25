@@ -16,6 +16,8 @@ download_iso_files() {
 
   log "Downloading ISO files and other required files locally..."
 
+  cd ~/Git_Project/Snare_Lab_POC/ansible/
+
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/ubuntu-22.iso"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/virtio-win.iso"
@@ -53,21 +55,21 @@ download_iso_files() {
   )
 
   DIRECTORIES=(
-    "ansible/downloads/ubuntu_ISO"
-    "ansible/downloads"
-    "ansible/downloads/windows_10_ISO"
-    "ansible/downloads/windows_10_ISO"
-    "ansible/downloads/windows_10_ISO"
-    "ansible/downloads/windows_10_ISO"
-    "ansible/downloads/snare_central_ISO"
-    "ansible/downloads/snare_central_ISO"
-    "ansible/downloads/snare_central_ISO"
-    "ansible/downloads/snare_central_ISO"
-    "ansible/downloads/windows_10_ISO"
-    "ansible/downloads/windows_server_2019_ISO"
-    "ansible/downloads/windows_server_2019_ISO"
-    "ansible/downloads/windows_server_2019_ISO"
-    "ansible/downloads/windows_server_2019_ISO"
+    "images/ubuntu_ISO"
+    "images"
+    "images/windows_10_ISO"
+    "images/windows_10_ISO"
+    "images/windows_10_ISO"
+    "images/windows_10_ISO"
+    "images/snare_central_ISO"
+    "images/snare_central_ISO"
+    "images/snare_central_ISO"
+    "images/snare_central_ISO"
+    "images/windows_10_ISO"
+    "images/windows_server_2019_ISO"
+    "images/windows_server_2019_ISO"
+    "images/windows_server_2019_ISO"
+    "images/windows_server_2019_ISO"
   )
 
   for index in "${!DIRECTORIES[@]}"; do
