@@ -29,7 +29,7 @@ transfer_files() {
   log "Transferring local files to Proxmox server..."
 
   LOCAL_FILES=(
-    "~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_ISO/windows_server_2019.iso"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/windows_server_2019.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso/windows_10.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.vma.zst"
   )
@@ -63,11 +63,11 @@ transfer_files() {
   \033[0m"
 }
 
-run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT your_next_script.sh"
-  cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./your_next_script.sh
-}
+#run_next_script() {
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT your_next_script.sh"
+#  cd ~/Git_Project/Snare_Lab_POC/Setup
+#  ./your_next_script.sh
+#}
 
 transfer_files
-run_next_script
+#run_next_script
