@@ -15,6 +15,7 @@ download_snare_files() {
   echo -e "\n\n####################### Starting Step 6 #######################\n" | tee -a $LOGFILE
 
   log "Downloading Snare files locally..."
+cd ~/Git_Project/Snare_Lab_POC/ansible
 
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Ubuntu-22-Agent-v5.8.1-1-x64.deb"
@@ -46,7 +47,7 @@ download_snare_files() {
     "SnareReflector-Windows-x64-v2.5.1.msi"
   )
 
-  DIRECTORY="ansible/downloads/snareproducts"
+  DIRECTORY="snareproducts"
 
   mkdir -p "$DIRECTORY"
 
