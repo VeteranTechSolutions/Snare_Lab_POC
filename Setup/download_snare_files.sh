@@ -15,7 +15,7 @@ download_snare_files() {
   echo -e "\n\n####################### Starting Step 6 #######################\n" | tee -a $LOGFILE
 
   log "Downloading Snare files locally..."
-cd ~/Git_Project/Snare_Lab_POC/ansible
+  cd ~/Git_Project/Snare_Lab_POC/ansible || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible"
 
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Ubuntu-22-Agent-v5.8.1-1-x64.deb"
@@ -57,8 +57,12 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
     log "Downloading $FILE_NAME from $FILE_URL to $DIRECTORY..."
 
     if [ ! -f "$DIRECTORY/$FILE_NAME" ]; then
-      wget -O "$DIRECTORY/$FILE_NAME" "$FILE_URL" || error_exit "Failed to download $FILE_NAME."
-      log "$FILE_NAME downloaded successfully."
+      wget -O "$DIRECTORY/$FILE_NAME" "$FILE_URL"
+      if [ $? -ne 0 ]; then
+        error_exit "Failed to download $FILE_NAME."
+      else
+        log "$FILE_NAME downloaded successfully."
+      fi
     else
       log "$FILE_NAME already exists. Skipping download."
     fi
@@ -85,16 +89,11 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
   \033[0m"
 }
 
-
 run_next_script() {
   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows_10.iso.sh"
-  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso
+  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso"
   ./reassemble_windows_10.iso.sh
 }
-
-
-
-
 
 download_snare_files
 run_next_script
