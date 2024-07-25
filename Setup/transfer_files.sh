@@ -45,14 +45,17 @@ transfer_files() {
     "~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/windows_server_2019.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso/windows_10.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/ubuntu_22_iso/ubuntu-22.iso"
-    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.vma.zst"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
   )
 
   REMOTE_PATHS=(
     "/var/lib/vz/template/iso/windows_server_2019.iso"
     "/var/lib/vz/template/iso/windows_10.iso"
     "/var/lib/vz/template/iso/ubuntu-22.iso"
-    "/var/lib/vz/dump/snare_central.vma.zst"
+    "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
+    "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
+    
   )
 
   ssh_user="$PROXMOX_USER"
@@ -60,6 +63,15 @@ transfer_files() {
   for index in "${!LOCAL_FILES[@]}"; do
     LOCAL_FILE=${LOCAL_FILES[$index]}
     REMOTE_PATH=${REMOTE_PATHS[$index]}
+    log "Checking if $REMOTE_PATH exists on Proxmox server..."
+
+    sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no "$ssh_user@$PROXMOX_NODE_IP" "test -f $REMOTE_PATH" >> $LOGFILE 2>&1
+
+    if [ $? -eq 0 ]; then
+      log "$REMOTE_PATH already exists. Skipping transfer."
+      continue
+    fi
+
     log "Transferring $LOCAL_FILE to $REMOTE_PATH on Proxmox server..."
 
     if [ ! -f ${LOCAL_FILE/#\~/$HOME} ]; then
