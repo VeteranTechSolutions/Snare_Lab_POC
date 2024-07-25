@@ -31,12 +31,14 @@ transfer_files() {
   LOCAL_FILES=(
     "~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/windows_server_2019.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso/windows_10.iso"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/ubuntu_22_iso/ubuntu-22.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.vma.zst"
   )
 
   REMOTE_PATHS=(
     "/var/lib/vz/template/iso/windows_server_2019.iso"
     "/var/lib/vz/template/iso/windows_10.iso"
+    "/var/lib/vz/template/iso/ubuntu-22.iso"
     "/var/lib/vz/dump/snare_central.vma.zst"
   )
 
@@ -64,9 +66,9 @@ transfer_files() {
 }
 
 #run_next_script() {
-#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT your_next_script.sh"
-#  cd ~/Git_Project/Snare_Lab_POC/Setup
-#  ./your_next_script.sh
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_terraforming.sh"
+#  cd ~/Git_Project/Snare_Lab_POC/terraform
+#  ./task_terraforming.sh
 #}
 
 transfer_files
