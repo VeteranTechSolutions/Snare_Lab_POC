@@ -19,8 +19,6 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
 
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Ubuntu-22-Agent-v5.8.1-1-x64.deb"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare_Agent_Manager_Windows_Console_License.sl.txt"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare_Central_License.sl.txt"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Epilog-Agent-v5.8.1-x64.exe"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-MSSQL-Agent-v5.8.1-x64.exe"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Windows-Agent-.Desktop-Only.-v5.8.1-x64.exe"
@@ -33,8 +31,6 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
 
   FILENAMES=(
     "Snare-Ubuntu-22-Agent-v5.8.1-1-x64.deb"
-    "Snare_Agent_Manager_Windows_Console_License.sl.txt"
-    "Snare_Central_License.sl.txt"
     "Snare-Epilog-Agent-v5.8.1-x64.exe"
     "Snare-MSSQL-Agent-v5.8.1-x64.exe"
     "Snare-Windows-Agent-.Desktop-Only.-v5.8.1-x64.exe"
@@ -45,7 +41,7 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
     "SnareReflector-Windows-x64-v2.5.1.msi"
   )
 
-  DIRECTORY="snareproducts"
+  DIRECTORY="snare_products"
 
   mkdir -p "$DIRECTORY"
 
