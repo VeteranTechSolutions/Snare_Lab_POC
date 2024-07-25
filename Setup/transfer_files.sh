@@ -48,6 +48,7 @@ transfer_files() {
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
     "~/Git_Project/Snare_Lab_POC/Setup/restore_sc.sh"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/107.conf"
   )
 
   REMOTE_PATHS=(
@@ -57,6 +58,7 @@ transfer_files() {
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
     "/var/lib/vz/dump/restore_sc.sh"
+    "/etc/pve/qemu-server/107.conf"
 
   )
 
