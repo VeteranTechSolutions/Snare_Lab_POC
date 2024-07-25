@@ -12,9 +12,9 @@ error_exit() {
 }
 
 source_env() {
-  if [ -f SSHENV ]; then
+  if [ -f ~/Git_Project/Snare_Lab_POC/SSHENV ]; then
     log "Sourcing SSHENV file..."
-    source SSHENV
+    source ~/Git_Project/Snare_Lab_POC/SSHENV
   else
     error_exit "SSHENV file not found! Exiting..."
   fi
