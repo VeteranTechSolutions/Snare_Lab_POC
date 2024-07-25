@@ -21,17 +21,22 @@ source_env() {
   fi
 }
 
+test_ssh_connection() {
+  log "Testing SSH connection to Proxmox server..."
+  sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "echo 'SSH connection successful'" >> $LOGFILE 2>&1
+  if [ $? -ne 0 ]; then
+    error_exit "SSH connection to Proxmox server failed. Please check the credentials and network connectivity."
+  fi
+  log "SSH connection to Proxmox server successful."
+}
+
 configure_proxmox_users() {
   echo -e "\n\n####################### Starting Step 3 #######################\n" | tee -a $LOGFILE
 
   log "Configuring Proxmox users and roles..."
 
-  #read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
-  #read -p "Enter Proxmox User Username: " PROXMOX_USER
-  #echo
-
   log "Executing SSH commands on Proxmox server..."
-  sshpass -p "$PROXMOX_PASSWORD" ssh $PROXMOX_USER@$PROXMOX_IP << EOF >> $LOGFILE 2>&1
+  sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP << EOF >> $LOGFILE 2>&1
 pveum role add provisioner -privs "Datastore.AllocateSpace Datastore.Audit Pool.Allocate Pool.Audit SDN.Use Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Console VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt"
 pveum user add userprovisioner@pve
 pveum aclmod / -user userprovisioner@pve -role provisioner
@@ -57,7 +62,7 @@ EOF
   echo "Creating .env file..."
   echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > .env
   echo "PROXMOX_API_TOKEN=$API_TOKEN" >> .env
-  echo "PROXMOX_NODE_IP=$PROXMOX_USER_IP" >> .env
+  echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> .env
   echo "PROXMOX_NODE_NAME=pve" >> .env
   log ".env file created successfully with the captured API token."
 
@@ -116,7 +121,7 @@ run_next_script() {
 }
 
 source_env
+test_ssh_connection
 configure_proxmox_users
 replace_placeholders
 run_next_script
-
