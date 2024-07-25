@@ -16,7 +16,7 @@ download_iso_files() {
 
   log "Downloading ISO files and other required files locally..."
 
-  cd ~/Git_Project/Snare_Lab_POC/ansible/
+  cd ~/Git_Project/Snare_Lab_POC/ansible || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible/"
 
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/ubuntu-22.iso"
@@ -24,16 +24,12 @@ download_iso_files() {
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows10.iso.partaa"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows10.iso.partab"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows10.iso.partac"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows10_original_checksum.txt"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare_Central.vma.zst.partaa"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare_Central.vma.zst.partab"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare_Central_original_checksum.txt"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/reassemble_Snare_Central.iso.sh"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/reassemble_windows10.iso.sh"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows_server_2019.iso.partaa"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows_server_2019.iso.partab"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows_server_2019.iso.partac"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows_server_2019_original_checksum.txt"
+    
   )
 
   FILENAMES=(
@@ -42,45 +38,25 @@ download_iso_files() {
     "windows10.iso.partaa"
     "windows10.iso.partab"
     "windows10.iso.partac"
-    "windows10_original_checksum.txt"
     "Snare_Central.vma.zst.partaa"
     "Snare_Central.vma.zst.partab"
-    "Snare_Central_original_checksum.txt"
-    "reassemble_Snare_Central.iso.sh"
-    "reassemble_windows10.iso.sh"
     "windows_server_2019.iso.partaa"
     "windows_server_2019.iso.partab"
     "windows_server_2019.iso.partac"
-    "windows_server_2019_original_checksum.txt"
   )
 
   DIRECTORIES=(
-    "images/ubuntu_ISO"
+    "images/ubuntu_22_iso"
     "images"
-    "images/windows_10_ISO"
-    "images/windows_10_ISO"
-    "images/windows_10_ISO"
-    "images/windows_10_ISO"
-    "images/snare_central_ISO"
-    "images/snare_central_ISO"
-    "images/snare_central_ISO"
-    "images/snare_central_ISO"
-    "images/windows_10_ISO"
-    "images/windows_server_2019_ISO"
-    "images/windows_server_2019_ISO"
-    "images/windows_server_2019_ISO"
-    "images/windows_server_2019_ISO"
+    "images/windows_10_iso"
+    "images/windows_10_iso"
+    "images/windows_10_iso"
+    "images/snare_central_iso"
+    "images/snare_central_iso"
+    "images/windows_server_2019_iso"
+    "images/windows_server_2019_iso"
+    "images/windows_server_2019_iso"
   )
-
-  for index in "${!DIRECTORIES[@]}"; do
-    mkdir -p "${DIRECTORIES[$index]}"
-  done
-
-  if [ $? -ne 0 ]; then
-    error_exit "Failed to create directories locally."
-  fi
-
-  log "Directories created locally."
 
   for index in "${!FILES[@]}"; do
     FILE_URL=${FILES[$index]}
@@ -119,7 +95,7 @@ download_iso_files() {
 
 run_next_script() {
   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT download_snare_files.sh"
-  cd ~/Git_Project/Snare_Lab_POC/Setup
+  cd ~/Git_Project/Snare_Lab_POC/Setup || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/Setup"
   ./download_snare_files.sh
 }
 
