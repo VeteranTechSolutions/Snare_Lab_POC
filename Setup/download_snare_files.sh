@@ -93,14 +93,14 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
 
 make_executable() {
   log "Making Image Script Executables"
-   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/reassemble_windows10.iso.sh
-   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/reassemble_ windows_server_2019.iso.sh
-   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/reassemble_Snare_Central.iso.sh
+   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/images/reassemble_windows10.iso.sh
+   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/images/reassemble_ windows_server_2019.iso.sh
+   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/images/reassemble_Snare_Central.iso.sh
 }
 
 run_next_script() {
   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows10.iso.sh"
-  cd ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO
+  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_ISO
   ./reassemble_windows10.iso.sh
 }
 
