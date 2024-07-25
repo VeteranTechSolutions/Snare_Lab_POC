@@ -56,7 +56,7 @@ transfer_files() {
     "/var/lib/vz/template/iso/ubuntu-22.iso"
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
-    "/var/lib/vz/dump/restore_sc.sh
+    "/var/lib/vz/dump/restore_sc.sh"
 
   )
 
