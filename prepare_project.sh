@@ -42,6 +42,7 @@ prepare_project() {
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/update_system_and_install_dependencies.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/configure_user_and_replace_placeholders.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/download_iso_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/restore_sc
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/download_snare_files.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/install_automation_tools.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/reassemble_iso_files.sh 
