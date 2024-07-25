@@ -2,7 +2,7 @@
 
 # Reassemble the parts into a single file
 echo "Reassembling the parts..."
-cat windows10.iso.part* > "windows10.iso"
+cat windows10.iso.part* > "windows_10.iso"
 
 # List the reassembled file to verify
 echo "Reassembled file:"
