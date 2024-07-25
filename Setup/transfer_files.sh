@@ -55,7 +55,6 @@ transfer_files() {
     "/var/lib/vz/template/iso/ubuntu-22.iso"
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
     "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
-    
   )
 
   ssh_user="$PROXMOX_USER"
@@ -97,14 +96,15 @@ transfer_files() {
   \033[0m"
 }
 
-# Uncomment and modify this section if you have a next script to run
-# run_next_script() {
-#   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_templating.sh"
-#   cd ~/Git_Project/Snare_Lab_POC/packer
-#   ./task_templating.sh
-# }
+transfer_restore_script_and_execute() {
+  log "Transferring restore_snare_central.sh to remote server..."
+  sshpass -p "$PROXMOX_PASSWORD" scp -o StrictHostKeyChecking=no restore_snare_central.sh $ssh_user@$PROXMOX_NODE_IP:~ || error_exit "Failed to transfer restore_snare_central.sh"
+
+  log "Executing restore_snare_central.sh on remote server..."
+  sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no "$ssh_user@$PROXMOX_NODE_IP" "chmod +x ~/restore_snare_central.sh && ~/restore_snare_central.sh" || error_exit "Failed to execute restore_snare_central.sh on remote server"
+}
 
 source_env
 test_ssh_connection
 transfer_files
-# run_next_script
+transfer_restore_script_and_execute
