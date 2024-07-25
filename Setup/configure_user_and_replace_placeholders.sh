@@ -64,6 +64,7 @@ EOF
   echo "PROXMOX_API_TOKEN=$API_TOKEN" >> ../.env
   echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> ../.env
   echo "PROXMOX_NODE_NAME=$PROXMOX_NODE_NAME" >> ../.env
+  echo "PROXMOX_PASSWORD=$PROXMOX_PASSWORD" >> ../.env
   log ".env file created successfully with the captured API token."
 
   echo -e "\033[1;32m
