@@ -12,11 +12,12 @@ error_exit() {
 }
 
 source_env() {
-  if [ -f ~/Git_Project/Snare_Lab_POC/SSHENV ]; then
+  SSHENV_PATH=~/Git_Project/Snare_Lab_POC/SSHENV
+  if [ -f $SSHENV_PATH ]; then
     log "Sourcing SSHENV file..."
-    source ~/Git_Project/Snare_Lab_POC/SSHENV
+    source $SSHENV_PATH
   else
-    error_exit "SSHENV file not found! Exiting..."
+    error_exit "SSHENV file not found at $SSHENV_PATH! Exiting..."
   fi
 }
 
@@ -114,6 +115,7 @@ run_next_script() {
   ./install_automation_tools.sh
 }
 
+source_env
 configure_proxmox_users
 replace_placeholders
 run_next_script
