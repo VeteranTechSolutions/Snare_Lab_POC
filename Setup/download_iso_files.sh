@@ -14,11 +14,7 @@ error_exit() {
 download_iso_files() {
   echo -e "\n\n####################### Starting Step 5 #######################\n" | tee -a $LOGFILE
 
-  log "Downloading ISO files and other required files on Proxmox server..."
-
-  read -p "Enter Proxmox User IP: " PROXMOX_USER_IP
-  read -p "Enter Proxmox User Username: " PROXMOX_USER
-  echo
+  log "Downloading ISO files and other required files locally..."
 
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/ubuntu-22.iso"
@@ -74,15 +70,15 @@ download_iso_files() {
     "ansible/downloads/windows_server_2019_ISO"
   )
 
-  ssh $PROXMOX_USER@$PROXMOX_USER_IP << EOF >> $LOGFILE 2>&1
-    mkdir -p ansible/downloads/ubuntu_ISO ansible/downloads/windows_10_ISO ansible/downloads/snare_central_ISO ansible/downloads/windows_server_2019_ISO
-EOF
+  for index in "${!DIRECTORIES[@]}"; do
+    mkdir -p "${DIRECTORIES[$index]}"
+  done
 
   if [ $? -ne 0 ]; then
-    error_exit "Failed to create directories on Proxmox server."
+    error_exit "Failed to create directories locally."
   fi
 
-  log "Directories created on Proxmox server."
+  log "Directories created locally."
 
   for index in "${!FILES[@]}"; do
     FILE_URL=${FILES[$index]}
@@ -90,15 +86,18 @@ EOF
     FILE_DIR=${DIRECTORIES[$index]}
     log "Downloading $FILE_NAME from $FILE_URL to $FILE_DIR..."
 
-    ssh $PROXMOX_USER@$PROXMOX_USER_IP "cd $FILE_DIR && if [ ! -f $FILE_NAME ]; then nohup wget -O $FILE_NAME $FILE_URL & fi" || error_exit "Failed to initiate download of $FILE_NAME."
-    log "$FILE_NAME download initiated."
+    if [ ! -f "$FILE_DIR/$FILE_NAME" ]; then
+      wget -O "$FILE_DIR/$FILE_NAME" "$FILE_URL" || error_exit "Failed to download $FILE_NAME."
+      log "$FILE_NAME downloaded successfully."
+    else
+      log "$FILE_NAME already exists. Skipping download."
+    fi
   done
 
   echo -e "\033[1;32m
   ##############################################################
   #                                                            #
-  #    ISO files and required files download initiated         #
-  #    successfully.                                           #
+  #    ISO files and required files downloaded successfully    #
   #                                                            #
   #                     STEP 5 COMPLETE                        #
   #                                                            #
@@ -117,11 +116,10 @@ EOF
 }
 
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT download_snare_files.sh"
   cd ~/Git_Project/Snare_Lab_POC/Setup
   ./download_snare_files.sh
 }
-
 
 download_iso_files
 run_next_script
