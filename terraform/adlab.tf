@@ -20,7 +20,11 @@ resource "proxmox_virtual_environment_pool" "training_pool" {
   pool_id = "TRAINING"
 }
 
-data "proxmox_virtual_environment_vms" "server" {
+data "proxmox_virtual_environment_vms" "sc" {
+  tags      = ["traininglab-sc"]
+}
+
+data "proxmox_virtual_environment_vms" "ubuntu_server" {
   tags      = ["traininglab-server"]
 }
 
@@ -34,9 +38,10 @@ data "proxmox_virtual_environment_vms" "ws" {
 
 locals {
   vm_id_templates = {
-    workstation = data.proxmox_virtual_environment_vms.ws.vms[0].vm_id
-    win2019     = data.proxmox_virtual_environment_vms.win2019.vms[0].vm_id
-    ubuntu      = data.proxmox_virtual_environment_vms.server.vms[0].vm_id
+    windows_10              = data.proxmox_virtual_environment_vms.ws.vms[0].vm_id
+    windows_server_2019     = data.proxmox_virtual_environment_vms.win2019.vms[0].vm_id
+    ubuntu_server           = data.proxmox_virtual_environment_vms.ubuntu_server.vms[0].vm_id
+    snare_central           = data.proxmox_virtual_environment_vms.sc.vms[0].vm_id
   }
 
   default_vm_config = {
@@ -49,9 +54,10 @@ locals {
 
 resource "proxmox_virtual_environment_vm" "vm" {
   for_each = {
-    Linux-Desktop = local.vm_id_templates.ubuntu
-    Win-Server         = local.vm_id_templates.win2019
-    Win-Desktop        = local.vm_id_templates.workstation
+    Snare-Central = local.vm_id_templates.snare_central
+    Linux-Desktop = local.vm_id_templates.ubuntu_server
+    Win-Server         = local.vm_id_templates.windows_server_2019
+    Win-Desktop        = local.vm_id_templates.windows_10
   }
 
   name = each.key
@@ -102,6 +108,7 @@ output "ansible_inventory" {
   value = templatefile("${path.module}/inventory_hosts.tmpl", {
     linux_ips = {
       "Linux-Desktop" = proxmox_virtual_environment_vm.vm["Linux-Desktop"].ipv4_addresses[1][0]
+      "Snare-Central" = proxmox_virtual_environment_vm.vm["Snare-Central"].ipv4_addresses[1][0]
     },
     windows_ips = {
       "Win-Server"  = proxmox_virtual_environment_vm.vm["Win-Server"].ipv4_addresses[0][0]
