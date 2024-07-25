@@ -28,7 +28,7 @@ echo "Done."
 
 run_next_script() {
   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_snare_central.iso.sh"
-  cd ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/
+  cd ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso
   ./reassemble_snare_central.iso.sh
 }
 
