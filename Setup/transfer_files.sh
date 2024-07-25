@@ -12,18 +12,22 @@ error_exit() {
 }
 
 source_env() {
-  SSHENV_PATH=~/Git_Project/Snare_Lab_POC/SSHENV
-  if [ -f $SSHENV_PATH ]; then
-    log "Sourcing SSHENV file..."
-    source $SSHENV_PATH
+  ENV_PATH=~/Git_Project/Snare_Lab_POC/.env
+  if [ -f $ENV_PATH ]; then
+    log "Sourcing .env file..."
+    set -o allexport
+    source $ENV_PATH
+    set +o allexport
   else
-    error_exit "SSHENV file not found at $SSHENV_PATH! Exiting..."
+    error_exit ".env file not found at $ENV_PATH! Exiting..."
   fi
 }
 
 test_ssh_connection() {
   log "Testing SSH connection to Proxmox server..."
-  sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no $PROXMOX_USER@$PROXMOX_IP "echo 'SSH connection successful'" >> $LOGFILE 2>&1
+  ssh_user="$PROXMOX_USER"
+  log "sshpass -p \"$PROXMOX_PASSWORD\" ssh -o StrictHostKeyChecking=no $ssh_user@$PROXMOX_NODE_IP \"echo 'SSH connection successful'\""
+  sshpass -p "$PROXMOX_PASSWORD" ssh -o StrictHostKeyChecking=no "$ssh_user@$PROXMOX_NODE_IP" "echo 'SSH connection successful'" >> $LOGFILE 2>&1
   if [ $? -ne 0 ]; then
     error_exit "SSH connection to Proxmox server failed. Please check the credentials and network connectivity."
   fi
@@ -51,12 +55,19 @@ transfer_files() {
     "/var/lib/vz/dump/snare_central.vma.zst"
   )
 
+  ssh_user="$PROXMOX_USER"
+
   for index in "${!LOCAL_FILES[@]}"; do
     LOCAL_FILE=${LOCAL_FILES[$index]}
     REMOTE_PATH=${REMOTE_PATHS[$index]}
     log "Transferring $LOCAL_FILE to $REMOTE_PATH on Proxmox server..."
 
-    sshpass -p "$PROXMOX_PASSWORD" scp $LOCAL_FILE $PROXMOX_USER@$PROXMOX_IP:$REMOTE_PATH >> $LOGFILE 2>&1
+    if [ ! -f ${LOCAL_FILE/#\~/$HOME} ]; then
+      error_exit "Local file $LOCAL_FILE does not exist."
+    fi
+
+    log "Executing: sshpass -p \"$PROXMOX_PASSWORD\" scp -o StrictHostKeyChecking=no ${LOCAL_FILE/#\~/$HOME} $ssh_user@$PROXMOX_NODE_IP:$REMOTE_PATH"
+    sshpass -p "$PROXMOX_PASSWORD" scp -o StrictHostKeyChecking=no ${LOCAL_FILE/#\~/$HOME} "$ssh_user@$PROXMOX_NODE_IP:$REMOTE_PATH" >> $LOGFILE 2>&1
 
     if [ $? -ne 0 ]; then
       error_exit "Failed to transfer $LOCAL_FILE to $REMOTE_PATH on Proxmox server."
@@ -74,13 +85,14 @@ transfer_files() {
   \033[0m"
 }
 
-#run_next_script() {
-#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_templating.sh"
-#  cd ~/Git_Project/Snare_Lab_POC/packer
-#  ./task_templating.sh
-#}
+# Uncomment and modify this section if you have a next script to run
+# run_next_script() {
+#   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_templating.sh"
+#   cd ~/Git_Project/Snare_Lab_POC/packer
+#   ./task_templating.sh
+# }
 
 source_env
 test_ssh_connection
 transfer_files
-#run_next_script
+# run_next_script
