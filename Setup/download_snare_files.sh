@@ -19,7 +19,6 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
 
   FILES=(
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Ubuntu-22-Agent-v5.8.1-1-x64.deb"
-    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Fullyconfigured.inf"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare_Agent_Manager_Windows_Console_License.sl.txt"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare_Central_License.sl.txt"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/Snare-Epilog-Agent-v5.8.1-x64.exe"
@@ -34,7 +33,6 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
 
   FILENAMES=(
     "Snare-Ubuntu-22-Agent-v5.8.1-1-x64.deb"
-    "Fullyconfigured.inf"
     "Snare_Agent_Manager_Windows_Console_License.sl.txt"
     "Snare_Central_License.sl.txt"
     "Snare-Epilog-Agent-v5.8.1-x64.exe"
@@ -91,17 +89,11 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
   \033[0m"
 }
 
-make_executable() {
-  log "Making Image Script Executables"
-   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_ISO/reassemble_windows10.iso.sh
-   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_ISO/reassemble_ windows_server_2019.iso.sh
-   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_ISO/reassemble_Snare_Central.iso.sh
-}
 
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows10.iso.sh"
-  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_ISO
-  ./reassemble_windows10.iso.sh
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows_10.iso.sh"
+  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso
+  ./reassemble_windows_10.iso.sh
 }
 
 
@@ -109,5 +101,4 @@ run_next_script() {
 
 
 download_snare_files
-make_executable
 run_next_script
