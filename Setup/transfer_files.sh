@@ -66,9 +66,9 @@ transfer_files() {
 }
 
 #run_next_script() {
-#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_terraforming.sh"
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_templating.sh"
 #  cd ~/Git_Project/Snare_Lab_POC/terraform
-#  ./task_terraforming.sh
+#  ./task_templating.sh
 #}
 
 transfer_files
