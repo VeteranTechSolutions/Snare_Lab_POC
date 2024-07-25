@@ -91,4 +91,11 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
   \033[0m"
 }
 
+#run_next_script() {
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+#  cd ~/Git_Project/Snare_Lab_POC/Setup
+#  ./install_automation_tools.sh
+#}
+
+
 download_snare_files
