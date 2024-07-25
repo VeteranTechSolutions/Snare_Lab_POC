@@ -108,6 +108,8 @@ output "ansible_inventory" {
   value = templatefile("${path.module}/inventory_hosts.tmpl", {
     linux_ips = {
       "Linux-Desktop" = proxmox_virtual_environment_vm.vm["Linux-Desktop"].ipv4_addresses[1][0]
+    },
+    snare_central_ips = {
       "Snare-Central" = proxmox_virtual_environment_vm.vm["Snare-Central"].ipv4_addresses[1][0]
     },
     windows_ips = {
