@@ -80,10 +80,6 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
   ##############################################################
   \033[0m"
 
-  log "Making the next script (reassemble_iso_files.sh) executable..."
-  chmod +x reassemble_iso_files.sh || error_exit "Failed to make reassemble_iso_files.sh executable."
-  log "Next script (reassemble_iso_files.sh) is now executable."
-
   echo -e "\033[1;34m
   ##############################################################
   #                                                            #
