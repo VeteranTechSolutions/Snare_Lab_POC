@@ -20,7 +20,7 @@ get_proxmox_credentials() {
   echo
 
   # Save credentials to a local variable file
-  cat <<EOL > SSHENV
+  cat <<EOL > ~/Git_Project/Snare_Lab_POC/SSHENV
 export PROXMOX_IP="$PROXMOX_IP"
 export PROXMOX_USER="$PROXMOX_USER"
 export PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
