@@ -64,6 +64,7 @@ EOF
   echo "PROXMOX_API_TOKEN=$API_TOKEN" >> ../.env
   echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> ../.env
   echo "PROXMOX_NODE_NAME=$PROXMOX_NODE_NAME" >> ../.env
+  echo "PROXMOX_USER=$PROXMOX_USER" >> ../.env
   echo "PROXMOX_PASSWORD=$PROXMOX_PASSWORD" >> ../.env
   log ".env file created successfully with the captured API token."
 
@@ -80,6 +81,7 @@ replace_placeholders() {
   source_env
 
   log "Replacing placeholders in configuration files..."
+
   find ./packer -type f -name "example.auto.pkrvars.hcl.txt" -exec bash -c \
     'mv "$0" "${0/example.auto.pkrvars.hcl.txt/value.auto.pkrvars.hcl}"' {} \;
 
@@ -109,14 +111,14 @@ replace_placeholders() {
   \033[0m"
 }
 
-run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
-  cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./install_automation_tools.sh
-}
+#run_next_script() {
+ # log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+ #cd ~/Git_Project/Snare_Lab_POC/Setup
+ # ./install_automation_tools.sh
+#}
 
 source_env
 test_ssh_connection
 configure_proxmox_users
 replace_placeholders
-run_next_script
+#run_next_script
