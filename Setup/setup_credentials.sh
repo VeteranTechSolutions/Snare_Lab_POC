@@ -29,4 +29,11 @@ EOL
   log "Proxmox credentials saved to SSHENV"
 }
 
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT update_system_and_install_dependencies.sh"
+  cd ~/Git_Project/Snare_Lab_POC/Setup
+  ./update_system_and_install_dependencies.sh
+}
+
 get_proxmox_credentials
+run_next_script
