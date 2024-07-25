@@ -92,10 +92,10 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
 }
 
 #run_next_script() {
-#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_iso_files.sh"
 #  cd ~/Git_Project/Snare_Lab_POC/Setup
-#  ./install_automation_tools.sh
+#  ./reassemble_iso_files.sh
 #}
 
-
+#run_next_script
 download_snare_files
