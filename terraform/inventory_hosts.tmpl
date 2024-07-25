@@ -10,6 +10,18 @@ linux:
       ansible_host: ${ip}
 %{ endfor ~}
 
+snare_central:
+  vars:
+    ansible_user: snare
+    ansible_password: snare
+    ansible_sudo_pass: snare
+    ansible_shell_type: sh
+  hosts:
+%{ for name, ip in snare_central_ips ~}
+    ${name}:
+      ansible_host: ${ip}
+%{ endfor ~}
+
 windows:
   vars:
     ansible_user: provision
