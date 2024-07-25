@@ -91,11 +91,23 @@ cd ~/Git_Project/Snare_Lab_POC/ansible
   \033[0m"
 }
 
-run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_iso_files.sh"
-  cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./reassemble_iso_files.sh
+make_executable() {
+  log "Making Image Script Executables"
+   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/reassemble_windows10.iso.sh
+   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/reassemble_ windows_server_2019.iso.sh
+   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO/reassemble_Snare_Central.iso.sh
 }
 
-run_next_script
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows10.iso.sh"
+  cd ~/Git_Project/Snare_Lab_POC/ansible/windows_10_ISO
+  ./reassemble_windows10.iso.sh
+}
+
+
+
+
+
 download_snare_files
+make_executable
+run_next_script
