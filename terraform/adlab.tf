@@ -22,7 +22,7 @@ data "proxmox_virtual_environment_vms" "sc" {
 }
 
 data "proxmox_virtual_environment_vms" "ubuntu_server" {
-  tags = ["traininglab-server"]
+  tags = ["traininglab-ubuntu"]
 }
 
 data "proxmox_virtual_environment_vms" "win2019" {
@@ -226,14 +226,14 @@ resource "proxmox_virtual_environment_vm" "win_desktop" {
 output "ansible_inventory" {
   value = templatefile("${path.module}/inventory_hosts.tmpl", {
     linux_ips = {
-      "Linux-Desktop" = proxmox_virtual_environment_vm.ubuntu_server.ipv4_addresses[1][0]
+      "ubuntu_server" = proxmox_virtual_environment_vm.ubuntu_server.ipv4_addresses[1][0]
     },
     snare_central_ips = {
-      "Snare-Central" = proxmox_virtual_environment_vm.snare_central.ipv4_addresses[1][0]
+      "snare_central" = proxmox_virtual_environment_vm.snare_central.ipv4_addresses[1][0]
     },
     windows_ips = {
-      "Win-Server"  = proxmox_virtual_environment_vm.win_server.ipv4_addresses[0][0]
-      "Win-Desktop" = proxmox_virtual_environment_vm.win_desktop.ipv4_addresses[0][0]
+      "win_server"  = proxmox_virtual_environment_vm.win_server.ipv4_addresses[0][0]
+      "win_desktop" = proxmox_virtual_environment_vm.win_desktop.ipv4_addresses[0][0]
     }
   })
 }
