@@ -102,13 +102,13 @@ transfer_files() {
 }
 
 
- #run_next_script() {
- #  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT execute_remote_script.sh"
- #  cd ~/Git_Project/Snare_Lab_POC/Setup
- #  ./execute_remote_script.sh
- #}
+ run_next_script() {
+   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_templating.sh"
+   cd ~/Git_Project/Snare_Lab_POC/packer
+   ./task_templating.sh
+ }
 
 source_env
 test_ssh_connection
 transfer_files
-#run_next_script
+run_next_script
