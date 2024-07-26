@@ -4,10 +4,10 @@ packer {
       version = ">= 1.1.3"
       source  = "github.com/hashicorp/proxmox"
     }
-    windows-update = {
-      version = ">=0.14.3"
-      source = "github.com/rgl/windows-update"
-    }
+    #windows-update = {
+    #  version = ">=0.14.3"
+    #  source = "github.com/rgl/windows-update"
+    #}
   }
 }
 
@@ -23,10 +23,10 @@ source "proxmox-iso" "traininglab-ws" {
   iso_storage_pool         = "local"
   iso_download_pve = true
 
-  communicator             = "ssh"
-  ssh_username             = var.lab_username
-  ssh_password             = var.lab_password
-  ssh_timeout              = "30m"
+  #communicator             = "ssh"
+  #ssh_username             = var.lab_username
+  #ssh_password             = var.lab_password
+  #ssh_timeout              = "30m"
   qemu_agent               = true
   cores                    = 6
   cpu_type                  = "host"
@@ -38,20 +38,42 @@ source "proxmox-iso" "traininglab-ws" {
   unmount_iso = true
   task_timeout = "30m"
 
-  additional_iso_files {
-    cd_files =["autounattend.xml"]
-    cd_label = "auto-win10.iso"
-    iso_storage_pool = "local"
-    unmount      = true
+  cloud_init              = true
+  cloud_init_storage_pool = "local"
+  communicator             = "winrm"
+  winrm_insecure           = true
+  winrm_no_proxy           = true
+  winrm_password           = var.winrm_password
+  winrm_timeout            = "120m"
+  winrm_use_ssl            = true
+  winrm_username           = var.winrm_username
 
+  #additional_iso_files {
+  #  cd_files =["autounattend.xml"]
+  #  cd_label = "auto-win10.iso"
+  #  iso_storage_pool = "local"
+  #  unmount      = true
+
+  #}
+
+  #additional_iso_files {
+  #  device       = "sata0"
+  #  iso_file     = "local:iso/virtio-win.iso"
+  #  iso_storage_pool = "local"
+  #  unmount      = true
+  #}
+
+  additional_iso_files {
+    device   = "sata4"
+    iso_file = "local:iso/virtio-win.iso"
+    unmount  = true
+  }
+  additional_iso_files {
+    device   = "sata5"
+    iso_file = "local:iso/scripts_withcloudinit.iso"
+    unmount  = true
   }
 
-  additional_iso_files {
-    device       = "sata0"
-    iso_file     = "local:iso/virtio-win.iso"
-    iso_storage_pool = "local"
-    unmount      = true
-  }
 
   network_adapters {
     bridge = var.netbridge
@@ -71,19 +93,32 @@ source "proxmox-iso" "traininglab-ws" {
 build {
   sources = ["sources.proxmox-iso.traininglab-ws"]
   
-  provisioner "windows-update" {
-    search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-    update_limit = 25
+  #provisioner "windows-update" {
+  #  search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+  #  update_limit = 25
+  #}
+
+  #provisioner "file" {
+  #  source      = "ws-sysprep.xml"
+  #  destination = "C:/Users/Public/sysprep.xml"
+  #}
+
+  #provisioner "windows-shell" {
+  #  inline = [
+  #  "c:\\windows\\system32\\sysprep\\sysprep.exe /mode:vm /generalize /oobe /shutdown /unattend:C:\\Users\\Public\\sysprep.xml",
+  #  ]
+  #}
+
+  provisioner "powershell" {
+    elevated_password = "vagrant"
+    elevated_user     = "vagrant"
+    scripts           = ["${path.root}/scripts/sysprep/cloudbase-init.ps1"]
   }
 
-  provisioner "file" {
-    source      = "ws-sysprep.xml"
-    destination = "C:/Users/Public/sysprep.xml"
-  }
-
-  provisioner "windows-shell" {
-    inline = [
-    "c:\\windows\\system32\\sysprep\\sysprep.exe /mode:vm /generalize /oobe /shutdown /unattend:C:\\Users\\Public\\sysprep.xml",
-    ]
+  provisioner "powershell" {
+    elevated_password = "vagrant"
+    elevated_user     = "vagrant"
+    pause_before      = "1m0s"
+    scripts           = ["${path.root}/scripts/sysprep/cloudbase-init-p2.ps1"]
   }
 }
