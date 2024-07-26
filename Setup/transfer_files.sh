@@ -60,7 +60,7 @@ transfer_files() {
     "/var/lib/vz/dump/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst.notes"
     "/etc/pve/qemu-server/105.conf"
     "/var/lib/vz/template/iso/virtio-win.iso"
-    "/var/lib/vz/template/iso/ scripts_withcloudinit.iso"
+    "/var/lib/vz/template/iso/scripts_withcloudinit.iso"
 
   )
 
