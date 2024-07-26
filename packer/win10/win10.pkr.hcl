@@ -31,7 +31,7 @@ source "proxmox-iso" "traininglab-ws" {
   cores                    = 6
   cpu_type                  = "host"
   memory                   = 8192
-  vm_name                  = "traininglab-windows-10"
+  vm_name                  = "traininglab-win10"
   tags                     = "traininglab-ws"
   template_description     = "TrainingLab Workstation Template"
   insecure_skip_tls_verify = true
