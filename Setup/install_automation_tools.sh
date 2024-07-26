@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOGFILE=setup.log
+LOGFILE=~/Git_Project/Snare_Lab_POC/setup.log
 
 log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a $LOGFILE
