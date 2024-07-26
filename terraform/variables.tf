@@ -1,11 +1,11 @@
 
 variable "pve_node" {
-    default = "pve"
+    default = ""
     description = "proxmox-pve hostname"
 }
 
 variable "pve_node_ip" {
-    default = "192.168.10.20"
+    default = ""
     description = "proxmox-pve ip"
 }
 
