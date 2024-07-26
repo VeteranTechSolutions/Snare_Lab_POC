@@ -12,7 +12,7 @@ error_exit() {
 }
 
 echo "[+] Build iso for scripts"
-mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o ~/Git_Project/Snare_Lab_POC/ansible/images/scripts_withcloudinit.iso ~/Git_Project/Snare_Lab_POC/scripts
+mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o ~/Git_Project/Snare_Lab_POC/ansible/images/scripts_withcloudinit.iso ~/Git_Project/Snare_Lab_POC/Setup/scripts
 
 download_iso_files() {
   echo -e "\n\n####################### Starting Step 5 #######################\n" | tee -a $LOGFILE
