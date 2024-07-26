@@ -45,20 +45,20 @@ transfer_files() {
     "~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/windows_server_2019.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso/windows_10.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/ubuntu_22_iso/ubuntu-22.iso"
-    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
-    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.vma.zst"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.vma.zst.notes"
     "~/Git_Project/Snare_Lab_POC/Setup/restore_sc.sh"
-    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/107.conf"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.conf"
   )
 
   REMOTE_PATHS=(
     "/var/lib/vz/template/iso/windows_server_2019.iso"
     "/var/lib/vz/template/iso/windows_10.iso"
     "/var/lib/vz/template/iso/ubuntu-22.iso"
-    "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
-    "/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst.notes"
+    "/var/lib/vz/dump/snare_central.vma.zst"
+    "/var/lib/vz/dump/snare_central.vma.zst.notes"
     "/var/lib/vz/dump/restore_sc.sh"
-    "/etc/pve/qemu-server/107.conf"
+    "/etc/pve/qemu-server/snare_central.conf"
 
   )
 
