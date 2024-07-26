@@ -18,7 +18,7 @@ resource "proxmox_virtual_environment_pool" "training_pool" {
 }
 
 data "proxmox_virtual_environment_vms" "sc" {
-  tags = ["traininglab-sc"]
+  tags = ["traininglab-lab"]
 }
 
 data "proxmox_virtual_environment_vms" "ubuntu_server" {
