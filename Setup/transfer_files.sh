@@ -49,6 +49,7 @@ transfer_files() {
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.vma.zst.notes"
     "~/Git_Project/Snare_Lab_POC/Setup/restore_sc.sh"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/snare_central.conf"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/virtio-win.iso"
   )
 
   REMOTE_PATHS=(
@@ -59,6 +60,7 @@ transfer_files() {
     "/var/lib/vz/dump/snare_central.vma.zst.notes"
     "/var/lib/vz/dump/restore_sc.sh"
     "/etc/pve/qemu-server/snare_central.conf"
+    "/var/lib/vz/template/iso/virtio-win.iso"
 
   )
 
