@@ -36,9 +36,9 @@ log "Creating Python virtual environment..."
 python3 -m venv Snare_POC_VENV || error_exit "Failed to create Python virtual environment."
 log "Python virtual environment created successfully."
 
-make_update_script_executable() {
-  log "Making update script executable..."
-  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/update_system_and_install_dependencies.sh  
+make_initial_credentials_script_executable() {
+  log "Making initial credentials script executable..."
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/setup_credentials.sh  
 
   echo -e "\033[1;34m
   ########################################################
@@ -65,7 +65,7 @@ make_update_script_executable() {
 
 main() {
   update_system_and_install_dependencies
-  make_update_script_executable
+  make_initial_credentials_script_executable
 }
 
 main
