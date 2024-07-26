@@ -2,15 +2,15 @@
 
 # Reassemble the parts into a single file
 echo "Reassembling the parts..."
-cat snare_central.vma.zst.part* > "snare_central.vma.zst"
+cat snare_central.vma.zst.part* > "vzdump-qemu-105-2024_07_25-19_42_45.vma.zst"
 
 # List the reassembled file to verify
 echo "Reassembled file:"
-ls -lh "snare_central.vma.zst"
+ls -lh "vzdump-qemu-105-2024_07_25-19_42_45.vma.zst"
 
 # Generate checksums for the reassembled file
 echo "Generating checksum for the reassembled file..."
-shasum -a 256 "snare_central.vma.zst" > reassembled_checksum.txt
+shasum -a 256 "vzdump-qemu-105-2024_07_25-19_42_45.vma.zst" > reassembled_checksum.txt
 
 # Compare the checksums
 echo "Comparing checksums..."
