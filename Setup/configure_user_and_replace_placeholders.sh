@@ -11,7 +11,7 @@ error_exit() {
   exit 1
 }
 
-source_env() {
+source_sshenv() {
   SSHENV_PATH=~/Git_Project/Snare_Lab_POC/SSHENV
   if [ -f $SSHENV_PATH ]; then
     log "Sourcing SSHENV file..."
@@ -60,12 +60,12 @@ EOF
   fi
 
   echo "Creating .env file..."
-  echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > ../.env
-  echo "PROXMOX_API_TOKEN=$API_TOKEN" >> ../.env
-  echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> ../.env
-  echo "PROXMOX_NODE_NAME=$PROXMOX_NODE_NAME" >> ../.env
-  echo "PROXMOX_USER=$PROXMOX_USER" >> ../.env
-  echo "PROXMOX_PASSWORD=$PROXMOX_PASSWORD" >> ../.env
+  echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > ~/Git_Project/Snare_Lab_POC/.env
+  echo "PROXMOX_API_TOKEN=$API_TOKEN" >> ~/Git_Project/Snare_Lab_POC/.env
+  echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> ~/Git_Project/Snare_Lab_POC/.env
+  echo "PROXMOX_NODE_NAME=$PROXMOX_NODE_NAME" >> ~/Git_Project/Snare_Lab_POC/.env
+  echo "PROXMOX_USER=$PROXMOX_USER" >> ~/Git_Project/Snare_Lab_POC/.env
+  echo "PROXMOX_PASSWORD=$PROXMOX_PASSWORD" >> ~/Git_Project/Snare_Lab_POC/.env
   log ".env file created successfully with the captured API token."
 
   echo -e "\033[1;32m
@@ -77,48 +77,13 @@ EOF
   \033[0m"
 }
 
-replace_placeholders() {
-  source_env
-
-  log "Replacing placeholders in configuration files..."
-
-  find ./packer -type f -name "example.auto.pkrvars.hcl.txt" -exec bash -c \
-    'mv "$0" "${0/example.auto.pkrvars.hcl.txt/value.auto.pkrvars.hcl}"' {} \;
-
-  find ./terraform -type f -name "example-terraform.tfvars.txt" -exec bash -c \
-    'mv "$0" "${0/example-terraform.tfvars.txt/terraform.tfvars}"' {} \;
-
-  log "Placeholders in configuration files replaced successfully."
-
-  echo -e "\033[1;32m
-  ##############################################################
-  #                                                            #
-  #    Placeholders replaced successfully.                     #
-  #                                                            #
-  #                     STEP 3 COMPLETE                        #
-  #                                                            #
-  ##############################################################
-  \033[0m"
-
-  echo -e "\033[1;34m
-  ##############################################################
-  #                                                            #
-  #    NEXT STEP: Run the following command:                   #
-  #                                                            #
-  #    ./install_automation_tools.sh                           #
-  #                                                            #
-  ##############################################################
-  \033[0m"
-}
-
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT install_automation_tools.sh"
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT replace_placeholders.sh"
   cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./install_automation_tools.sh
+  ./replace_placeholders.sh
 }
 
-source_env
+source_sshenv
 test_ssh_connection
 configure_proxmox_users
-replace_placeholders
 run_next_script
