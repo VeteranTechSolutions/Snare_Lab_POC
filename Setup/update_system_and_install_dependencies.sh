@@ -46,9 +46,9 @@ update_system_and_install_dependencies() {
 }
 
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT configure_user_and_replace_placeholders.sh"
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT configure_proxmox_users.sh"
   cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./configure_user_and_replace_placeholders.sh
+  ./configure_proxmox_users.sh
 }
 
 update_system_and_install_dependencies
