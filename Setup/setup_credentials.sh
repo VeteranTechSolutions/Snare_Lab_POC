@@ -11,6 +11,27 @@ error_exit() {
   exit 1
 }
 
+make_update_script_executable() {
+  log "Making update script executable..."
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/setup_credentials.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/update_system_and_install_dependencies.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/configure_user_and_replace_placeholders.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/download_iso_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/restore_sc.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/execute_remote_script.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/download_snare_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/install_automation_tools.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/reassemble_iso_files.sh 
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/transfer_files.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso/reassemble_windows_10.iso.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/reassemble_windows_server_2019.iso.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/reassemble_snare_central.iso.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/terraform/task_terraforming.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/packer/task_templating.sh
+}
+
+
+
 get_proxmox_credentials() {
   echo -e "\n\n####################### Getting Proxmox Credentials #######################\n" | tee -a $LOGFILE
 
