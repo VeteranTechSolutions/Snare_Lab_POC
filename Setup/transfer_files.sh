@@ -49,6 +49,7 @@ transfer_files() {
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst.notes"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/105.conf"
     "~/Git_Project/Snare_Lab_POC/ansible/images/virtio-win.iso"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/scripts_withcloudinit.iso"
   )
 
   REMOTE_PATHS=(
@@ -59,6 +60,7 @@ transfer_files() {
     "/var/lib/vz/dump/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst.notes"
     "/etc/pve/qemu-server/105.conf"
     "/var/lib/vz/template/iso/virtio-win.iso"
+    "/var/lib/vz/template/iso/ scripts_withcloudinit.iso"
 
   )
 
