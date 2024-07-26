@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-BACKUP_FILE="/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
+BACKUP_FILE="/var/lib/vz/dump/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst"
 STORAGE_NAME="local-zfs"
 
 # Function to find the next available VM ID
