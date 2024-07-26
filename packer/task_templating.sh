@@ -11,34 +11,36 @@ error_exit() {
   exit 1
 }
 
-run_packer_in_parallel() {
-  log "Running packer task templating in parallel..."
+source_env() {
+  ENV_PATH=~/Git_Project/Snare_Lab_POC/.env
+  if [ -f $ENV_PATH ]; then
+    log "Sourcing .env file..."
+    source $ENV_PATH
+  else
+    error_exit ".env file not found at $ENV_PATH! Exiting..."
+  fi
+}
+
+run_packer_builds() {
+  log "Running Packer task templating sequentially..."
 
   local base_dir=~/Git_Project/Snare_Lab_POC/packer
   local directories=("ubuntu-server" "win10" "win2019")
-  local pids=()
 
   for directory in "${directories[@]}"; do
     local dir_path="$base_dir/$directory"
     local log_path="$dir_path/packer_build.log"
 
     if [ -d "$dir_path" ]; then
-      (
-        cd $dir_path || error_exit "Failed to enter directory $dir_path."
-        log "Initializing Packer in $dir_path..."
-        packer init . >> $log_path 2>&1 || error_exit "Packer init failed in $dir_path."
-        log "Building template in: $(pwd)"
-        packer build . >> $log_path 2>&1 || error_exit "Packer build failed in $dir_path."
-      ) &
-      pids+=($!)
+      cd $dir_path || error_exit "Failed to enter directory $dir_path."
+      log "Initializing Packer in $dir_path..."
+      packer init . >> $log_path 2>&1 || error_exit "Packer init failed in $dir_path."
+      log "Building template in: $(pwd)"
+      packer build . >> $log_path 2>&1 || error_exit "Packer build failed in $dir_path."
+      cd ..
     else
       log "Directory $dir_path does not exist. Skipping..."
     fi
-  done
-
-  # Wait for all parallel processes to complete
-  for pid in "${pids[@]}"; do
-    wait $pid || error_exit "Packer task templating failed in one of the directories."
   done
 
   log "Packer task templating completed successfully in all directories."
@@ -60,6 +62,6 @@ run_next_script() {
   ./task_terraforming.sh
 }
 
-
-run_packer_in_parallel
+source_env
+run_packer_builds
 run_next_script
