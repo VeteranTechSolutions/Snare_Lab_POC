@@ -82,33 +82,20 @@ source "proxmox-iso" "windows" {
 
 build {
   sources = ["source.proxmox-iso.windows"]
-  provisioner "powershell" {
-    elevated_password = "${var.winrm_password}"
-    elevated_user     = "${var.winrm_username}"
-    script            = "./extra/scripts/windows/shared/phase-1.ps1"
-  }
-  
+
+
   provisioner "windows-update" {
     search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
     update_limit = 25
   }
+
 
   provisioner "file" {
     destination = "C:\\Users\\Administrator\\Desktop\\extend-trial.cmd"
     source      = "./extra/scripts/windows/shared/extend-trial.cmd"
   }
 
-  provisioner "powershell" {
-    elevated_password = "${var.winrm_password}"
-    elevated_user     = "${var.winrm_username}"
-    script            = "./extra/scripts/windows/shared/phase-5a.software.ps1"
-  }
-
-  provisioner "powershell" {
-    elevated_password = "${var.winrm_password}"
-    elevated_user     = "${var.winrm_username}"
-    script            = "./extra/scripts/windows/shared/phase-5d.windows-compress.ps1"
-  }
+  
 
   provisioner "file" {
     destination = "C:\\Windows\\System32\\Sysprep\\unattend.xml"
@@ -116,7 +103,8 @@ build {
   }
 
   provisioner "powershell" {
-    inline = ["Write-Output Phase-5-Deprovisioning", "if (!(Test-Path -Path $Env:SystemRoot\\system32\\Sysprep\\unattend.xml)){ Write-Output 'No file';exit (10)}", "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quit /quiet /unattend:C:\\Windows\\system32\\sysprep\\unattend.xml"]
+    inline = [
+    "c:\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quit /quiet /unattend:C:\\Windows\\system32\\sysprep\\unattend.xml",
+    ]
   }
-
 }
