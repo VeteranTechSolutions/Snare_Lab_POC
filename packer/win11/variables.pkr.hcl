@@ -125,18 +125,17 @@ variable "proxmox_node" {
   default = ""
 }
 
-variable "proxmox_token" {
-  type    = string
-  default = ""
-  sensitive = true
-}
-
-variable "proxmox_url" {
-  type    = string
+variable "proxmox_api_token" {
+  type = string
   default = ""
 }
 
-variable "proxmox_username" {
+variable "proxmox_api_id" {
+  type = string
+  default = ""
+}
+
+variable "proxmox_hostname" {
   type    = string
   default = ""
 }
