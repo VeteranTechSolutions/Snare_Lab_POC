@@ -79,4 +79,4 @@ autoinstall:
   # system can be supplied underneath a user-data section inside of
   # autoinstall.
   # user-data:
-  #
+  #   …
