@@ -1,14 +1,5 @@
-packer {
-  required_plugins {
-    proxmox = {
-      version = ">= 1.1.3"
-      source  = "github.com/hashicorp/proxmox"
-    }
-    windows-update = {
-       version = "0.16.7"
-       source  = "github.com/rgl/windows-update"
-    }
-  }
+locals {
+  packer_timestamp = formatdate("YYYYMMDD-hhmm", timestamp())
 }
 
 source "proxmox-iso" "windows" {
@@ -60,10 +51,10 @@ source "proxmox-iso" "windows" {
 
   machine                   = "${var.machine}"
   iso_file                  = "${var.iso_file}"
-  node                      = "${var.proxmox_node}"
-  proxmox_url               = "${var.proxmox_url}"
-  token                     = "${var.proxmox_token}"
-  username                  = "${var.proxmox_username}"
+  node                      = "${var.proxmox_hostname}"
+  proxmox_url               = "https://${var.proxmox_node}:8006/api2/json"
+  token                     = "${var.proxmox_api_token}"
+  username                  = "${var.proxmox_api_id}"
   template_name             = "${var.template}.${local.packer_timestamp}"
   unmount_iso               = "${var.unmount_iso}"
   insecure_skip_tls_verify  = "${var.insecure_skip_tls_verify}"
@@ -82,20 +73,63 @@ source "proxmox-iso" "windows" {
 
 build {
   sources = ["source.proxmox-iso.windows"]
-
-
-  provisioner "windows-update" {
-    search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-    update_limit = 25
+  provisioner "powershell" {
+    elevated_password = "${var.winrm_password}"
+    elevated_user     = "${var.winrm_username}"
+    script            = "./extra/scripts/windows/shared/phase-1.ps1"
   }
 
+  provisioner "windows-restart" {
+    restart_timeout = "1h"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "${var.winrm_password}"
+    elevated_user     = "${var.winrm_username}"
+    script            = "./extra/scripts/windows/shared/phase-2.ps1"
+  }
+
+  provisioner "windows-restart" {
+    restart_timeout = "1h"
+  }
+
+  provisioner "windows-update" {
+    search_criteria = "IsInstalled=0"
+    update_limit = 10
+  }
+
+  provisioner "windows-restart" {
+    restart_timeout = "1h"
+  }
+
+  provisioner "windows-update" {
+    search_criteria = "IsInstalled=0"
+    update_limit = 10
+  }
+
+  provisioner "windows-restart" {
+    restart_timeout = "1h"
+  }
 
   provisioner "file" {
     destination = "C:\\Users\\Administrator\\Desktop\\extend-trial.cmd"
     source      = "./extra/scripts/windows/shared/extend-trial.cmd"
   }
 
-  
+  provisioner "powershell" {
+    elevated_password = "${var.winrm_password}"
+    elevated_user     = "${var.winrm_username}"
+    script            = "./extra/scripts/windows/shared/phase-5a.software.ps1"
+  }
+
+  provisioner "powershell" {
+    elevated_password = "${var.winrm_password}"
+    elevated_user     = "${var.winrm_username}"
+    script            = "./extra/scripts/windows/shared/phase-5d.windows-compress.ps1"
+  }
+  provisioner "windows-restart" {
+    restart_timeout = "1h"
+  }
 
   provisioner "file" {
     destination = "C:\\Windows\\System32\\Sysprep\\unattend.xml"
@@ -103,8 +137,7 @@ build {
   }
 
   provisioner "powershell" {
-    inline = [
-    "c:\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quit /quiet /unattend:C:\\Windows\\system32\\sysprep\\unattend.xml",
-    ]
+    inline = ["Write-Output Phase-5-Deprovisioning", "if (!(Test-Path -Path $Env:SystemRoot\\system32\\Sysprep\\unattend.xml)){ Write-Output 'No file';exit (10)}", "& $Env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quit /quiet /unattend:C:\\Windows\\system32\\sysprep\\unattend.xml"]
   }
+
 }
