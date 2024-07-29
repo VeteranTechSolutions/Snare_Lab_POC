@@ -18,27 +18,27 @@ resource "proxmox_virtual_environment_pool" "training_pool" {
 }
 
 data "proxmox_virtual_environment_vms" "sc" {
-  tags = ["traininglab-sc"]
+  tags      = ["traininglab-sc"]
 }
 
-data "proxmox_virtual_environment_vms" "ubuntu_server" {
-  tags = ["traininglab-ubuntu"]
+data "proxmox_virtual_environment_vms" "server" {
+  tags      = ["traininglab-server"]
 }
 
 data "proxmox_virtual_environment_vms" "win2019" {
-  tags = ["traininglab-win2019"]
+  tags      = ["traininglab-win2019"]
 }
 
 data "proxmox_virtual_environment_vms" "ws" {
-  tags = ["traininglab-ws"]
+  tags      = ["traininglab-ws"]
 }
 
 locals {
   vm_id_templates = {
-    windows_10              = data.proxmox_virtual_environment_vms.ws.vms[0].vm_id
-    windows_server_2019     = data.proxmox_virtual_environment_vms.win2019.vms[0].vm_id
-    ubuntu_server           = data.proxmox_virtual_environment_vms.ubuntu_server.vms[0].vm_id
-    snare_central           = data.proxmox_virtual_environment_vms.sc.vms[0].vm_id
+    workstation      = data.proxmox_virtual_environment_vms.ws.vms[0].vm_id
+    win2019          = data.proxmox_virtual_environment_vms.win2019.vms[0].vm_id
+    ubuntu           = data.proxmox_virtual_environment_vms.server.vms[0].vm_id
+    snare-central    = data.proxmox_virtual_environment_vms.sc.vms[0].vm_id
   }
 
   default_vm_config = {
@@ -49,14 +49,14 @@ locals {
   }
 }
 
-resource "proxmox_virtual_environment_vm" "snare_central" {
+resource "proxmox_virtual_environment_vm" "snare-central" {
   name      = "Snare-Central"
   pool_id   = proxmox_virtual_environment_pool.training_pool.pool_id
   node_name = var.pve_node
   on_boot   = false
 
   clone {
-    vm_id  = local.vm_id_templates.snare_central
+    vm_id  = local.vm_id_templates.snare-central
     full   = false
     retries = 2
   }
@@ -92,7 +92,7 @@ resource "proxmox_virtual_environment_vm" "snare_central" {
   }
 }
 
-resource "proxmox_virtual_environment_vm" "ubuntu_server" {
+resource "proxmox_virtual_environment_vm" "ubuntu" {
   name      = "Linux-Desktop"
   pool_id   = proxmox_virtual_environment_pool.training_pool.pool_id
   node_name = var.pve_node
@@ -135,7 +135,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_server" {
   }
 }
 
-resource "proxmox_virtual_environment_vm" "win_server" {
+resource "proxmox_virtual_environment_vm" "win2019" {
   name      = "Win-Server"
   pool_id   = proxmox_virtual_environment_pool.training_pool.pool_id
   node_name = var.pve_node
@@ -178,7 +178,7 @@ resource "proxmox_virtual_environment_vm" "win_server" {
   }
 }
 
-resource "proxmox_virtual_environment_vm" "win_desktop" {
+resource "proxmox_virtual_environment_vm" " workstation" {
   name      = "Win-Desktop"
   pool_id   = proxmox_virtual_environment_pool.training_pool.pool_id
   node_name = var.pve_node
@@ -226,14 +226,14 @@ resource "proxmox_virtual_environment_vm" "win_desktop" {
 output "ansible_inventory" {
   value = templatefile("${path.module}/inventory_hosts.tmpl", {
     linux_ips = {
-      "ubuntu_server" = proxmox_virtual_environment_vm.ubuntu_server.ipv4_addresses[1][0]
+      "ubuntu" = proxmox_virtual_environment_vm.ubuntu.ipv4_addresses[1][0]
     },
     snare_central_ips = {
-      "snare_central" = proxmox_virtual_environment_vm.snare_central.ipv4_addresses[1][0]
+      "snare-central" = proxmox_virtual_environment_vm.snare-central.ipv4_addresses[1][0]
     },
     windows_ips = {
-      "win_server"  = proxmox_virtual_environment_vm.win_server.ipv4_addresses[0][0]
-      "win_desktop" = proxmox_virtual_environment_vm.win_desktop.ipv4_addresses[0][0]
+      "win2019"  = proxmox_virtual_environment_vm.win2019.ipv4_addresses[0][0]
+      "workstation" = proxmox_virtual_environment_vm.workstation.ipv4_addresses[0][0]
     }
   })
 }
