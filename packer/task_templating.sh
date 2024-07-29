@@ -21,27 +21,15 @@ source_env() {
   fi
 }
 
-run_packer_builds() {
-  log "Running Packer task templating sequentially..."
+create_templates(){
 
-  local base_dir=~/Git_Project/Snare_Lab_POC/packer
-  local directories=("ubuntu-server" "win10" "win2019")
-
-  for directory in "${directories[@]}"; do
-    local dir_path="$base_dir/$directory"
-    local log_path="$dir_path/packer_build.log"
-
-    if [ -d "$dir_path" ]; then
-      cd $dir_path || error_exit "Failed to enter directory $dir_path."
-      log "Initializing Packer in $dir_path..."
-      packer init . >> $log_path 2>&1 || error_exit "Packer init failed in $dir_path."
-      log "Building template in: $(pwd)"
-      packer build . >> $log_path 2>&1 || error_exit "Packer build failed in $dir_path."
-      cd ..
-    else
-      log "Directory $dir_path does not exist. Skipping..."
-    fi
-  done
+    for directory in $(ls -d */); do
+        cd $directory
+        packer init .
+        echo "[+] building template in: $(pwd)"
+        packer build .
+        cd ..
+    done;
 
   log "Packer task templating completed successfully in all directories."
 
@@ -63,5 +51,5 @@ run_next_script() {
 }
 
 source_env
-run_packer_builds
+create_templates
 run_next_script
