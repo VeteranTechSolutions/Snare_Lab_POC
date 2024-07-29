@@ -12,8 +12,8 @@ safe_mode_pass: SafeModePassword.
 ca_name: '{{ domain_short }}-CA'
 
 
-snare_admin: 'snareadmin'
+first_user: 'snare'
 
-snare_admin_login: '{{ domain_short }}\{{ snare_admin }}'
-snare_admin_ssh: '{{ domain_short }}\{{ snare_admin }}'
-snare_admin_password: 'P@ssw0rd'
+first_user_login: '{{ domain_short }}\{{ first_user }}'
+first_user_ssh: '{{ domain_short }}\{{ first_user }}'
+first_user_password: 'Password1!'
