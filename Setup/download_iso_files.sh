@@ -39,7 +39,7 @@ download_iso_files() {
     "virtio-win.iso"
     #"windows10.iso.partaa"
     #"windows10.iso.partab"
-    "windows10.iso.partac"
+    #"windows10.iso.partac"
     "snare_central.vma.zst.partaa"
     "snare_central.vma.zst.partab"
     #"windows_server_2019.iso.partaa"
