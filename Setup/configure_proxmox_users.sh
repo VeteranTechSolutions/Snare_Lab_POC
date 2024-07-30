@@ -62,7 +62,7 @@ EOF
   fi
 
   echo "Creating .env file..."
-  echo "PROXMOX_API_ID=userprovisioner@pve\!provisioner-token" > ~/Git_Project/Snare_Lab_POC/.env
+  echo "PROXMOX_API_ID=userprovisioner@pve!provisioner-token" > ~/Git_Project/Snare_Lab_POC/.env
   echo "PROXMOX_API_TOKEN=$API_TOKEN" >> ~/Git_Project/Snare_Lab_POC/.env
   echo "PROXMOX_NODE_IP=$PROXMOX_IP" >> ~/Git_Project/Snare_Lab_POC/.env
   echo "PROXMOX_NODE_NAME=$PROXMOX_NODE_NAME" >> ~/Git_Project/Snare_Lab_POC/.env
