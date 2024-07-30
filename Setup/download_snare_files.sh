@@ -90,9 +90,12 @@ download_snare_files() {
 }
 
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows_10.iso.sh"
-  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso"
-  ./reassemble_windows_10.iso.sh
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_snare_central.iso.sh"
+  cd ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso"
+  ./reassemble_snare_central.iso.sh | tee -a $LOGFILE
+  if [ $? -ne 0 ]; then
+    error_exit "Failed to run reassemble_snare_central.iso.sh"
+  fi
 }
 
 download_snare_files
