@@ -5,21 +5,21 @@ packer {
       source  = "github.com/hashicorp/proxmox"
     }
     windows-update = {
-      version = "0.14.3"
-      source = "github.com/rgl/windows-update"
+       version = "0.16.7"
+       source  = "github.com/rgl/windows-update"
     }
   }
 }
 
-source "proxmox-iso" "traininglab-win11" {
+source "proxmox-iso" "traininglab-ws" {
   proxmox_url  = "https://${var.proxmox_node}:8006/api2/json"
   node         = var.proxmox_hostname
   username     = var.proxmox_api_id
   token        = var.proxmox_api_token
   
-  #iso_file     = "local:iso/windpws_server_2019.iso" #-- uncomment if you want to use local iso file and comment the next four lines
-  iso_checksum             = "sha256:36DE5ECB7A0DAA58DCE68C03B9465A543ED0F5498AA8AE60AB45FB7C8C4AE402"
-  iso_url                  = "https://software.download.prss.microsoft.com/dbazure/Win11_23H2_English_x64v2.iso?t=dccab1b1-6b8c-4b9b-be1d-fed30614a950&P1=1722372578&P2=601&P3=2&P4=h2I4r2Z7vwLhNQIgIajkjIEVSFZjEYRwsdtKvpgnD93On8va%2bOFQxbrPKiQae7nW%2fwOCTj%2fEVOGYFMxIAYwjvPU4sS%2fHbKtSRuSwAjwbThtkvYho%2fqeYMoUN8JbSC%2bSzf6YC6y%2fTI9npa3%2fBQnCaPpqgxZO4LFgubexl4RqJDMrXemE31ba5yAlnV7VZxqVM1FZd5Cp1%2fbf4cTn2NuOb6Zh4dkXEnOF8Ogox9phyNBmKnPbN4bu4I1cIwsdoBsua9e7G9bHZxjpYJ7rSmKDmFJQ67kgvIFkskkQ3o0YYvXOEEhDlCd3zDFfTgTGsSMmpmfgYeYQlc1KIgFgapLlHqw%3d%3d"
+  #iso_file     = "local:iso/windows_10.iso" #-- uncomment if you want to use local iso file and comment the next four lines
+  iso_checksum             = "sha256:ef7312733a9f5d7d51cfa04ac497671995674ca5e1058d5164d6028f0938d668"
+  iso_url                  = "https://software-static.download.prss.microsoft.com/dbazure/988969d5-f34g-4e03-ac9d-1f9786c66750/19045.2006.220908-0225.22h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
   iso_storage_pool         = "local"
   iso_download_pve = true
 
@@ -31,18 +31,19 @@ source "proxmox-iso" "traininglab-win11" {
   cores                    = 6
   cpu_type                  = "host"
   memory                   = 8192
-  vm_name                  = "traininglab-win11"
-  tags                     = "traininglab-win11"
-  template_description     = "TrainingLab Windows 11 Template - Sysprep done"
+  vm_name                  = "traininglab-ws"
+  tags                     = "traininglab-ws"
+  template_description     = "TrainingLab Workstation Template"
   insecure_skip_tls_verify = true
   unmount_iso = true
   task_timeout = "30m"
 
   additional_iso_files {
     cd_files =["autounattend.xml"]
-    cd_label = "auto-win11.iso"
+    cd_label = "auto-win10.iso"
     iso_storage_pool = "local"
     unmount      = true
+
   }
 
   additional_iso_files {
@@ -51,13 +52,6 @@ source "proxmox-iso" "traininglab-win11" {
     iso_checksum = "none"
     iso_storage_pool = "local"
     unmount      = true
-  }
-
-  # EFI disk for secure boot
-  efi_config {
-    efi_storage_pool        = var.efi_storage_pool
-    efi_type                = var.efi_type
-    pre_enrolled_keys       = var.pre_enrolled_keys
   }
 
   network_adapters {
@@ -75,9 +69,8 @@ source "proxmox-iso" "traininglab-win11" {
   scsi_controller = "virtio-scsi-single"
 }
 
-
 build {
-  sources = ["sources.proxmox-iso.traininglab-win11"]
+  sources = ["sources.proxmox-iso.traininglab-ws"]
   
   provisioner "windows-update" {
     search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
@@ -85,7 +78,7 @@ build {
   }
 
   provisioner "file" {
-    source      = "server-sysprep.xml"
+    source      = "ws-sysprep.xml"
     destination = "C:/Users/Public/sysprep.xml"
   }
 
