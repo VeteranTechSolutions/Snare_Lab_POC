@@ -54,5 +54,20 @@ run_next_script() {
   fi
 }
 
+#run_next_script() {
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows_server_2019.iso.sh"
+#  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/ || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/"
+#  ./reassemble_windows_server_2019.iso.sh | tee -a $LOGFILE
+#  if [ $? -ne 0 ]; then
+#    error_exit "Failed to run reassemble_windows_server_2019.iso.sh"
+#  fi
+#}
+
+#run_next_script() {
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT reassemble_windows_10.iso.sh"
+#  cd ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso"
+#  ./reassemble_windows_10.iso.sh
+#}
+
 reassemble_iso
 run_next_script
