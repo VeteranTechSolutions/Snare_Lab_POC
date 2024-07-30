@@ -52,7 +52,7 @@ additional_iso_files {
     pre_enrolled_keys       = "true"
   }
 
-  boot_command              = ["<wait5s><space><wait3s><space><wait3s><space><wait3s><space><wait3s>"]
+  boot_command              = ["<wait3s><space><wait3s><space><wait3s><space><wait3s><space><wait5s><space><wait5s><space><wait5s><space><wait5s><space><wait5s><space>"]
   boot_wait                 = "5s"
   bios                      = "ovmf"
   disks {
