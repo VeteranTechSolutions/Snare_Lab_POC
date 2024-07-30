@@ -5,8 +5,8 @@ packer {
       source  = "github.com/hashicorp/proxmox"
     }
     windows-update = {
-       version = "0.16.7"
-       source  = "github.com/rgl/windows-update"
+      version = "0.14.3"
+      source = "github.com/rgl/windows-update"
     }
   }
 }
@@ -17,9 +17,9 @@ source "proxmox-iso" "traininglab-win2019" {
   username     = var.proxmox_api_id
   token        = var.proxmox_api_token
   
-  iso_file     = "local:iso/windows_server_2019.iso" 
-  #iso_checksum             = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
-  #iso_url                  = "https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
+  #iso_file     = "local:iso/windpws_server_2019.iso" #-- uncomment if you want to use local iso file and comment the next four lines
+  iso_checksum             = "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1"
+  iso_url                  = "https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
   iso_storage_pool         = "local"
   iso_download_pve = true
 
