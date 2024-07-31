@@ -45,7 +45,7 @@ create_templates(){
 }
 
 source_env_vagrant() {
-  ENV_PATH=~/Git_Project/windows-vagrant/secrets-proxmox.sh
+  ENV_PATH=~/Git_Project/Snare_Lab_POC/packer/win11/secrets-proxmox.sh
   if [ -f $ENV_PATH ]; then
     log "Sourcing secrets-proxmox.sh file..."
     source $ENV_PATH
@@ -55,7 +55,7 @@ source_env_vagrant() {
 }
 
 build_win11(){
-
+log "Running MAKE Build for windows-11-23h2-uefi-proxmox"
 make build-windows-11-23h2-uefi-proxmox
 
 }
