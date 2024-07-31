@@ -39,7 +39,6 @@ get_proxmox_credentials() {
   read -p "Enter Proxmox User: " PROXMOX_USER
   read -p "Enter Proxmox Node Name: " PROXMOX_NODE_NAME
   read -s -p "Enter Proxmox Password: " PROXMOX_PASSWORD
-  
   echo
 
   # Save credentials to a specified location
@@ -49,10 +48,18 @@ export PROXMOX_IP="$PROXMOX_IP"
 export PROXMOX_USER="$PROXMOX_USER"
 export PROXMOX_NODE_NAME="$PROXMOX_NODE_NAME"
 export PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
-
 EOL
 
-  log "Proxmox credentials saved to $SSHENV_PATH"
+  # Also save credentials to another specified location
+  ENV_PATH=~/Git_Project/windows-vagrant/secrets-proxmox.sh
+  cat <<EOL > $ENV_PATH
+PROXMOX_URL="https://$PROXMOX_IP:8006/api2/json"
+PROXMOX_USERNAME="$PROXMOX_USER@pam"
+PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
+PROXMOX_NODE="$PROXMOX_NODE_NAME"
+EOL
+
+  echo "Proxmox credentials saved to $SSHENV_PATH and $ENV_PATH" | tee -a $LOGFILE
 }
 
 run_next_script() {
