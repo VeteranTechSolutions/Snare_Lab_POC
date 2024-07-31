@@ -55,6 +55,10 @@ source_env_vagrant() {
 }
 
 build_win11(){
+
+log "Changing Directory to log ~/Git_Project/Snare_Lab_POC/packer/win11/"
+cd ~/Git_Project/Snare_Lab_POC/packer/win11/
+
 log "Running MAKE Build for windows-11-23h2-uefi-proxmox"
 make build-windows-11-23h2-uefi-proxmox
 
