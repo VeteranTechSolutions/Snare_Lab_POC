@@ -89,8 +89,9 @@
 
                 <!-- Product Key from http://technet.microsoft.com/en-us/library/jj612867.aspx -->
                 <ProductKey>
-					<Key>00000-00000-00000-00000-00000</Key>
-				</ProductKey>
+			<Key>VK7JG-NPHTM-C97JM-9MPGT-3V66T</Key>
+			<WillShowUI>Never</WillShowUI>
+		</ProductKey>
             </UserData>
             <ImageInstall>
                 <OSImage>
