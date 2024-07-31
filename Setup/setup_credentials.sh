@@ -60,12 +60,12 @@ EOF
   echo "Proxmox credentials saved to $SSHENV_PATH and $ENV_PATH" | tee -a $LOGFILE
 }
 
-#run_next_script() {
-#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT update_system_and_install_dependencies.sh"
-#  cd ~/Git_Project/Snare_Lab_POC/Setup
-#  ./update_system_and_install_dependencies.sh
-#}
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT update_system_and_install_dependencies.sh"
+  cd ~/Git_Project/Snare_Lab_POC/Setup
+  ./update_system_and_install_dependencies.sh
+}
 
 prepare_project_scripts
 get_proxmox_credentials
-#run_next_script
+run_next_script
