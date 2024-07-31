@@ -50,65 +50,70 @@
                     <CreatePartitions>
                         <CreatePartition wcm:action="add">
                             <Order>1</Order>
+                            <Type>EFI</Type>
+                            <Size>100</Size>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>2</Order>
+                            <Type>MSR</Type>
+                            <Size>16</Size>
+                        </CreatePartition>
+                        <CreatePartition wcm:action="add">
+                            <Order>3</Order>
                             <Type>Primary</Type>
                             <Extend>true</Extend>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
                         <ModifyPartition wcm:action="add">
-                            <Extend>false</Extend>
-                            <Format>NTFS</Format>
-                            <Letter>C</Letter>
                             <Order>1</Order>
+                            <Format>FAT32</Format>
+                            <Label>System</Label>
                             <PartitionID>1</PartitionID>
-                            <Label>Windows 10</Label>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
+                            <Order>2</Order>
+                            <PartitionID>2</PartitionID>
+                        </ModifyPartition>
+                        <ModifyPartition wcm:action="add">
+                            <Order>3</Order>
+                            <Format>NTFS</Format>
+                            <Label>Windows</Label>
+                            <Letter>C</Letter>
+                            <PartitionID>3</PartitionID>
                         </ModifyPartition>
                     </ModifyPartitions>
                     <DiskID>0</DiskID>
                     <WillWipeDisk>true</WillWipeDisk>
                 </Disk>
-                <WillShowUI>OnError</WillShowUI>
             </DiskConfiguration>
-            <UserData>
-                <AcceptEula>true</AcceptEula>
-                <FullName>TrainingLab</FullName>
-                <Organization>TrainingLab</Organization>
-
-                <!--
-                    NOTE: If you are re-configuring this for use of a retail key
-                    and using a retail ISO, you need to adjust the <ProductKey> block
-                    below to look like this:
-
-                    <ProductKey>
-                        <Key>W269N-WFGWX-YVC9B-4J6C9-T83GX</Key>
-                        <WillShowUI>Never</WillShowUI>
-                    </ProductKey>
-
-                    Notice the addition of the `<Key>` element.
-                -->
-
-                <!-- Product Key from http://technet.microsoft.com/en-us/library/jj612867.aspx -->
-                <ProductKey>
-			<Key>VK7JG-NPHTM-C97JM-9MPGT-3V66T</Key>
-			<WillShowUI>Never</WillShowUI>
-		</ProductKey>
-            </UserData>
             <ImageInstall>
                 <OSImage>
                     <InstallTo>
                         <DiskID>0</DiskID>
-                        <PartitionID>1</PartitionID>
+                        <PartitionID>3</PartitionID>
                     </InstallTo>
-                    <WillShowUI>OnError</WillShowUI>
-                    <InstallToAvailablePartition>false</InstallToAvailablePartition>
                     <InstallFrom>
                         <MetaData wcm:action="add">
-                            <Key>/IMAGE/NAME</Key>
+                            <Key>/IMAGE/INDEX</Key>
                             <Value>Windows 11 Pro</Value>
                         </MetaData>
                     </InstallFrom>
                 </OSImage>
             </ImageInstall>
+            <UserData>
+                <ProductKey>
+                    <!--
+                        Generic Volume License Keys (GVLK) for Key Management Services (KMS) client activation
+                        https://learn.microsoft.com/en-us/windows-server/get-started/kms-client-activation-keys
+                    -->
+                    <!--<Key>NPPR9-FWDCX-D2C8J-H872K-2YT43</Key>-->
+                    <WillShowUI>OnError</WillShowUI>
+                </ProductKey>
+                <AcceptEula>true</AcceptEula>
+                <FullName>Vagrant</FullName>
+                <Organization>Vagrant</Organization>
+            </UserData>
         </component>
         <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS"
             xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State"
