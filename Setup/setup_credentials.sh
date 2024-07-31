@@ -49,7 +49,7 @@ export PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
 EOL
 
   # Also save credentials to another specified location
-  ENV_PATH=~/Git_Project/Snare_POC/packer/win11/secrets-proxmox.sh
+  ENV_PATH=~/Git_Project/Snare_Lab_POC/packer/win11/secrets-proxmox.sh
   cat >$ENV_PATH <<EOF
 export PROXMOX_URL='https://$PROXMOX_IP:8006/api2/json'
 export PROXMOX_USERNAME='$PROXMOX_USER@pam'
