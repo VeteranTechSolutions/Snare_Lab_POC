@@ -25,10 +25,6 @@ prepare_project_scripts() {
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/transfer_files.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/packer/task_templating.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/terraform/task_terraforming.sh
-
-  cd ~/Git_Project/
-
-  git clone https://github.com/VeteranTechSolutions/windows-vagrant.git
   
 }
 
@@ -53,12 +49,12 @@ export PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
 EOL
 
   # Also save credentials to another specified location
-  ENV_PATH=~/Git_Project/windows-vagrant/secrets-proxmox.sh
+  ENV_PATH=~/Git_Project/Snare_POC/packer/win/secrets-proxmox.sh
   cat >$ENV_PATH <<EOF
-export PROXMOX_URL='https://192.168.10.21:8006/api2/json'
-export PROXMOX_USERNAME='root@pam'
-export PROXMOX_PASSWORD='P@ssw0rd'
-export PROXMOX_NODE='pve'
+export PROXMOX_URL='https://$PROXMOX_IP:8006/api2/json'
+export PROXMOX_USERNAME='$PROXMOX_USER@pam'
+export PROXMOX_PASSWORD='$PROXMOX_PASSWORD'
+export PROXMOX_NODE='$PROXMOX_NODE_NAME'
 EOF
 
   echo "Proxmox credentials saved to $SSHENV_PATH and $ENV_PATH" | tee -a $LOGFILE
