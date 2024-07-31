@@ -25,6 +25,8 @@ prepare_project_scripts() {
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/transfer_files.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/packer/task_templating.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/terraform/task_terraforming.sh
+
+  git clone https://github.com/VeteranTechSolutions/windows-vagrant.git
   
 }
 
