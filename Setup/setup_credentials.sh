@@ -49,7 +49,7 @@ export PROXMOX_PASSWORD="$PROXMOX_PASSWORD"
 EOL
 
   # Also save credentials to another specified location
-  ENV_PATH=~/Git_Project/Snare_POC/packer/win/secrets-proxmox.sh
+  ENV_PATH=~/Git_Project/Snare_POC/packer/win11/secrets-proxmox.sh
   cat >$ENV_PATH <<EOF
 export PROXMOX_URL='https://$PROXMOX_IP:8006/api2/json'
 export PROXMOX_USERNAME='$PROXMOX_USER@pam'
@@ -60,12 +60,12 @@ EOF
   echo "Proxmox credentials saved to $SSHENV_PATH and $ENV_PATH" | tee -a $LOGFILE
 }
 
-run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT update_system_and_install_dependencies.sh"
-  cd ~/Git_Project/Snare_Lab_POC/Setup
-  ./update_system_and_install_dependencies.sh
-}
+#run_next_script() {
+#  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT update_system_and_install_dependencies.sh"
+#  cd ~/Git_Project/Snare_Lab_POC/Setup
+#  ./update_system_and_install_dependencies.sh
+#}
 
 prepare_project_scripts
 get_proxmox_credentials
-run_next_script
+#run_next_script
