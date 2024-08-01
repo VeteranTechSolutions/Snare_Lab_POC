@@ -1,0 +1,58 @@
+---
+- name: Open ports 6161, 6261, and 6262 on all Windows hosts
+  hosts: windows
+  gather_facts: no
+  tasks:
+    - name: Open inbound port 6161
+      community.windows.win_firewall_rule:
+        name: "Open Port 6161 Inbound"
+        enable: yes
+        direction: in
+        protocol: tcp
+        localport: 6161
+        action: allow
+
+    - name: Open outbound port 6161
+      community.windows.win_firewall_rule:
+        name: "Open Port 6161 Outbound"
+        enable: yes
+        direction: out
+        protocol: tcp
+        localport: 6161
+        action: allow
+
+    - name: Open inbound port 6261
+      community.windows.win_firewall_rule:
+        name: "Open Port 6261 Inbound"
+        enable: yes
+        direction: in
+        protocol: tcp
+        localport: 6261
+        action: allow
+
+    - name: Open outbound port 6261
+      community.windows.win_firewall_rule:
+        name: "Open Port 6261 Outbound"
+        enable: yes
+        direction: out
+        protocol: tcp
+        localport: 6261
+        action: allow
+
+    - name: Open inbound port 6262
+      community.windows.win_firewall_rule:
+        name: "Open Port 6262 Inbound"
+        enable: yes
+        direction: in
+        protocol: tcp
+        localport: 6262
+        action: allow
+
+    - name: Open outbound port 6262
+      community.windows.win_firewall_rule:
+        name: "Open Port 6262 Outbound"
+        enable: yes
+        direction: out
+        protocol: tcp
+        localport: 6262
+        action: allow
