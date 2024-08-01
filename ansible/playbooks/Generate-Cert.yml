@@ -1,0 +1,37 @@
+---
+- name: Generate and export a certificate for snaretraininglab.local
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Install OpenSSL
+      ansible.builtin.package:
+        name: openssl
+        state: present
+
+    - name: Generate private key
+      ansible.builtin.command:
+        cmd: openssl genrsa -out ../snare_products/snaretraininglab.local.key 2048
+        args:
+          creates: ../snare_products/snaretraininglab.local.key
+
+    - name: Generate CSR
+      ansible.builtin.command:
+        cmd: openssl req -new -key ../snare_products/snaretraininglab.local.key -out ../snare_products/snaretraininglab.local.csr
+        args:
+          creates: ../snare_products/snaretraininglab.local.csr
+
+    - name: Generate self-signed certificate
+      ansible.builtin.command:
+        cmd: openssl x509 -req -days 365 -in ../snare_products/snaretraininglab.local.csr -signkey ../snare_products/snaretraininglab.local.key -out ../snare_products/snaretraininglab.local.crt
+        args:
+          creates: ../snare_products/snaretraininglab.local.crt
+
+    - name: Create PFX file
+      ansible.builtin.command:
+        cmd: openssl pkcs12 -export -out ../snare_products/snaretraininglab.local.pfx -inkey ../snare_products/snaretraininglab.local.key -in ../snare_products/snaretraininglab.local.crt -passout pass:yourPFXPassword
+        args:
+          creates: ../snare_products/snaretraininglab.local.pfx
+
+    - name: Display completion message
+      ansible.builtin.debug:
+        msg: "Certificate and key have been successfully created and saved to ../snare_products/"
