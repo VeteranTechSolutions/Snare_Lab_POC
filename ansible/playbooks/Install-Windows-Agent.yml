@@ -15,7 +15,7 @@
 
     - name: Copy Snare Agent installer to Windows machine
       ansible.builtin.win_copy:
-        src: ../playbooks/Snare-Products/Snare-Windows-Agent-v5.8.1-x64.exe
+        src: ../snare_products/Snare-Windows-Agent-v5.8.1-x64.exe
         dest: C:\Temp\Snare-Windows-Agent-v5.8.1-x64.exe
       register: copy_snare_installer
 
@@ -25,7 +25,7 @@
 
     - name: Copy configuration file to Windows machine
       ansible.builtin.win_copy:
-        src: ../playbooks/Snare-Products/Fullyconfigured.inf
+        src: ../snare_products/Fullyconfigured.inf
         dest: C:\Temp\Fullyconfigured.inf
       register: copy_snare_config
 
