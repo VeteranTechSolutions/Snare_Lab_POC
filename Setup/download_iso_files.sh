@@ -22,7 +22,7 @@ download_iso_files() {
   cd ~/Git_Project/Snare_Lab_POC/ansible || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/ansible/"
 
   FILES=(
-    #"https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/ubuntu-22.iso"
+    "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/ubuntu-22.iso"
     "https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/virtio-win.iso"
     #"https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows10.iso.partaa"
     #"https://github.com/VeteranTechSolutions/Snare_Lab_POC/releases/download/POC_downloads/windows10.iso.partab"
@@ -35,7 +35,7 @@ download_iso_files() {
   )
 
   FILENAMES=(
-    #"ubuntu-22.iso"
+    "ubuntu-22.iso"
     "virtio-win.iso"
     #"windows10.iso.partaa"
     #"windows10.iso.partab"
@@ -48,7 +48,7 @@ download_iso_files() {
   )
 
   DIRECTORIES=(
-    #"images/ubuntu_22_iso"
+    "images/ubuntu_22_iso"
     "images"
     #"images/windows_10_iso"
     #"images/windows_10_iso"
