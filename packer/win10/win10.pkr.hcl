@@ -26,7 +26,7 @@ source "proxmox-iso" "traininglab-ws" {
   communicator             = "ssh"
   ssh_username             = var.lab_username
   ssh_password             = var.lab_password
-  ssh_timeout              = "30m"
+  ssh_timeout              = "60m"
   qemu_agent               = true
   cores                    = 6
   cpu_type                  = "host"
