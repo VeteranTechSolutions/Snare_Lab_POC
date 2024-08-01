@@ -1,6 +1,6 @@
 ---
 - name: Install WiX Toolset
-  hosts: FS
+  hosts: MSSQL-Agent
   gather_facts: no
   tasks:
     - name: Ensure C:\Temp directory exists
