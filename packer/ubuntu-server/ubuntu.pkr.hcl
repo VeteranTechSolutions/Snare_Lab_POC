@@ -22,7 +22,7 @@ source "proxmox-iso" "traininglab-server" {
   communicator             = "ssh"
   ssh_username             = var.lab_username
   ssh_password             = var.lab_password
-  ssh_timeout              = "30m"
+  ssh_timeout              = "60m"
   qemu_agent               = true
   cores                    = 6
   cpu_type                  = "host"
@@ -32,7 +32,7 @@ source "proxmox-iso" "traininglab-server" {
   template_description     = "TrainingLab Ubuntu Server Template"
   insecure_skip_tls_verify = true
   unmount_iso = true
-  task_timeout = "30m"
+  task_timeout = "60m"
   http_directory           = "server"   # or server files inside the http folder on a container inside proxmox host
 
   additional_iso_files {
