@@ -1,0 +1,15 @@
+# Snare Training Lab: PFX Certificate Generation
+
+This guide details the process for creating a certificate for the domain `snaretraininglab.local` in PFX format, complete with a private key and exportable attributes. This process involves using OpenSSL to generate the necessary certificate components and then packaging them into a PFX file.
+
+## Prerequisites
+
+- **OpenSSL:** Ensure OpenSSL is installed on your machine. It is available on Linux, Mac, and Windows.
+
+## Steps to Create a PFX Certificate
+
+### 1. Generate a Private Key and Certificate Signing Request (CSR)
+
+- **Generate the private key:**
+  ```bash
+  openssl genrsa -out snaretraininglab.local.key 2048
