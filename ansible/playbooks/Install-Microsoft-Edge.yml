@@ -1,0 +1,56 @@
+---
+- name: Install latest Microsoft Edge and set as default browser on all Windows hosts
+  hosts: windows
+  gather_facts: no
+  tasks:
+    - name: Ensure C:\Temp directory exists
+      ansible.builtin.win_file:
+        path: C:\Temp
+        state: directory
+      register: ensure_temp_dir
+
+    - name: Debug ensure C:\Temp directory exists
+      debug:
+        msg: "Ensure C:\\Temp directory exists result: {{ ensure_temp_dir }}"
+
+    - name: Download Microsoft Edge installer
+      win_get_url:
+        url: https://go.microsoft.com/fwlink/?linkid=2192449
+        dest: C:\Temp\MicrosoftEdgeSetup.exe
+      register: download_edge_installer
+
+    - name: Debug download Microsoft Edge installer result
+      debug:
+        msg: "Download Microsoft Edge installer result: {{ download_edge_installer }}"
+
+    - name: Install Microsoft Edge
+      ansible.builtin.win_command: 'C:\Temp\MicrosoftEdgeSetup.exe /silent /install'
+      register: install_edge
+
+    - name: Debug install Microsoft Edge result
+      debug:
+        msg: "Install Microsoft Edge result: {{ install_edge }}"
+
+    - name: Remove Microsoft Edge installer
+      ansible.builtin.win_file:
+        path: C:\Temp\MicrosoftEdgeSetup.exe
+        state: absent
+      register: cleanup_edge_installer
+
+    - name: Debug remove Microsoft Edge installer result
+      debug:
+        msg: "Remove Microsoft Edge installer result: {{ cleanup_edge_installer }}"
+
+    - name: Set Microsoft Edge as the default browser
+      win_shell: |
+        $RegPathHttp = "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice"
+        $RegPathHttps = "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice"
+        $Name = "ProgId"
+        $Value = "MSEdgeHTM"
+        Set-ItemProperty -Path $RegPathHttp -Name $Name -Value $Value
+        Set-ItemProperty -Path $RegPathHttps -Name $Name -Value $Value
+      register: set_default_browser
+
+    - name: Debug set Microsoft Edge as the default browser result
+      debug:
+        msg: "Set Microsoft Edge as the default browser result: {{ set_default_browser }}"
