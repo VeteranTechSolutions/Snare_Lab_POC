@@ -1,0 +1,36 @@
+- name: Join Domain
+  hosts: "windows:!SAMC"
+  gather_facts: no
+  tasks:
+    - name: Rename server
+      win_hostname:
+        name: "{{ inventory_hostname }}"
+      register: rename
+      
+    - name: Reboot after rename
+      win_reboot:
+      when: rename.reboot_required
+      
+    - name: Set DNS to Domain Controller
+      win_dns_client:
+        adapter_names: '*'
+        dns_servers:
+        - "{{ hostvars['SAMC']['ansible_host'] }}"
+      
+    - name: Join Domain
+      microsoft.ad.membership:
+        dns_domain_name: "{{ domain_name }}"
+        domain_admin_user: Administrator@{{ domain_name }}
+        domain_admin_password: "{{ domain_admin_password }}"
+        state: domain
+        reboot: true
+
+    - name: WORKAROUND - Create user's folder structure
+      ansible.windows.win_powershell:
+        script: |
+          Copy-Item -Recurse C:\Users\Default -Destination C:\Users\{{ first_user }} -Force -ErrorAction SilentlyContinue
+
+    - name: Misconfiguration - Create directory structure prerequisite
+      win_file:
+        path: C:\Users\{{ first_user }}\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine
+        state: directory
