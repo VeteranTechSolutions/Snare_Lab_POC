@@ -26,7 +26,7 @@ source "proxmox-iso" "traininglab-win2019" {
   communicator             = "ssh"
   ssh_username             = var.lab_username
   ssh_password             = var.lab_password
-  ssh_timeout              = "30m"
+  ssh_timeout              = "60m"
   qemu_agent               = true
   cores                    = 6
   cpu_type                  = "host"
@@ -36,7 +36,7 @@ source "proxmox-iso" "traininglab-win2019" {
   template_description     = "TrainingLab WindowsServer Template - Sysprep done"
   insecure_skip_tls_verify = true
   unmount_iso = true
-  task_timeout = "30m"
+  task_timeout = "60m"
 
   additional_iso_files {
     cd_files =["autounattend.xml"]
