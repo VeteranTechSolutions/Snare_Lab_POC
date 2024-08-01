@@ -22,21 +22,33 @@ source_env_POC() {
 }
 
 create_templates(){
+  # Default directories order
+  declare -a directories=("packer/win10" "packer/win2019" "packer/ubuntu-server")
 
-    for directory in $(ls -d */); do
-        cd $directory
-        packer init .
-        echo "[+] building template in: $(pwd)"
-        packer build .
-        cd ..
-    done;
+  # If there are command-line arguments, use them as the directory order
+  if [ "$#" -gt 0 ]; then
+    directories=("$@")
+  fi
 
-  log "Packer task templating completed successfully in all directories."
+  for directory in "${directories[@]}"; do
+    if [ -d "$directory" ]; then
+      cd "$directory"
+      packer init .
+      echo "[+] Building template in: $(pwd)"
+      packer build .
+      cd - # Return to the original directory
+    else
+      log "Directory $directory not found!"
+    fi
+  done
+
+  log "Packer task templating completed successfully in specified directories."
 
   echo -e "\033[1;32m
   ##############################################################
   #                                                            #
-  #    Templates created successfully in all directories.      #
+  #    Templates created successfully in all specified         #
+  #    directories.                                            #
   #                                                            #
   #    Next step: terraform apply                              #
   #                                                            #
