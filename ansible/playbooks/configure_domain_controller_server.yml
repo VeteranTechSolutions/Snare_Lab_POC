@@ -1,6 +1,6 @@
 ---
 - name: CONFIGURING DOMAIN CONTROLLER
-  hosts: DC
+  hosts: SAMC
   gather_facts: no
   tasks:
     - name: Rename server
