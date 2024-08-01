@@ -1,0 +1,54 @@
+---
+- name: Copy certificates to the SAMC host
+  hosts: SAMC
+  gather_facts: no
+  tasks:
+    - name: Ensure C:\Temp directory exists
+      ansible.builtin.win_file:
+        path: C:\Temp
+        state: directory
+      register: ensure_temp_dir
+
+    - name: Debug ensure C:\Temp directory exists
+      debug:
+        msg: "Ensure C:\\Temp directory exists result: {{ ensure_temp_dir }}"
+
+    - name: Copy snaretraininglab.local.crt to Windows machine
+      ansible.builtin.win_copy:
+        src: ../snare_products/snaretraininglab.local.crt
+        dest: C:\Temp\snaretraininglab.local.crt
+      register: copy_snare_crt
+
+    - name: Debug copy snaretraininglab.local.crt result
+      debug:
+        msg: "Copy snaretraininglab.local.crt to Windows machine result: {{ copy_snare_crt }}"
+
+    - name: Copy snaretraininglab.local.csr to Windows machine
+      ansible.builtin.win_copy:
+        src: ../snare_products/snaretraininglab.local.csr
+        dest: C:\Temp\snaretraininglab.local.csr
+      register: copy_snare_csr
+
+    - name: Debug copy snaretraininglab.local.csr result
+      debug:
+        msg: "Copy snaretraininglab.local.csr to Windows machine result: {{ copy_snare_csr }}"
+
+    - name: Copy snaretraininglab.local.key to Windows machine
+      ansible.builtin.win_copy:
+        src: ../snare_products/snaretraininglab.local.key
+        dest: C:\Temp\snaretraininglab.local.key
+      register: copy_snare_key
+
+    - name: Debug copy snaretraininglab.local.key result
+      debug:
+        msg: "Copy snaretraininglab.local.key to Windows machine result: {{ copy_snare_key }}"
+
+    - name: Copy snaretraininglab.local.pfx to Windows machine
+      ansible.builtin.win_copy:
+        src: ../snare_products/snaretraininglab.local.pfx
+        dest: C:\Temp\snaretraininglab.local.pfx
+      register: copy_snare_pfx
+
+    - name: Debug copy snaretraininglab.local.pfx result
+      debug:
+        msg: "Copy snaretraininglab.local.pfx to Windows machine result: {{ copy_snare_pfx }}"
