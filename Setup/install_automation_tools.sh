@@ -11,6 +11,32 @@ error_exit() {
   exit 1
 }
 
+check_and_fix_locale() {
+  echo -e "\n\n####################### Checking Locale #######################\n" | tee -a $LOGFILE
+
+  # Check if the locale is available
+  if ! locale -a | grep -q "en_US.UTF-8"; then
+    log "Locale en_US.UTF-8 not found. Generating locale..."
+
+    # Generate the locale
+    sudo locale-gen en_US.UTF-8 || error_exit "Failed to generate en_US.UTF-8 locale."
+    sudo update-locale LANG=en_US.UTF-8 || error_exit "Failed to update locale settings."
+
+    log "Locale en_US.UTF-8 generated successfully."
+  else
+    log "Locale en_US.UTF-8 is already generated."
+  fi
+
+  # Verify and export locale environment variables
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+
+  # Recheck locale settings
+  locale | tee -a $LOGFILE
+  log "Locale settings checked and fixed if necessary."
+}
+
 install_ansible() {
   echo -e "\n\n####################### Starting Step 4 #######################\n" | tee -a $LOGFILE
 
@@ -105,11 +131,8 @@ run_next_script() {
   ./download_iso_files.sh
 }
 
-
+check_and_fix_locale
 install_ansible
 install_packer_and_terraform
 install_ansible_collections
 run_next_script
-
-
-
