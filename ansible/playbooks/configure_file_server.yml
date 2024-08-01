@@ -1,6 +1,6 @@
 ---
 - name: CONFIGURING FILESERVER
-  hosts: FS
+  hosts: File-Server
   gather_facts: no
   tasks:
     - name: Installing FS-FileServer feature
