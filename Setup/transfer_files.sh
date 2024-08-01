@@ -44,7 +44,7 @@ transfer_files() {
   LOCAL_FILES=(
     #"~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/windows_server_2019.iso"
     #"~/Git_Project/Snare_Lab_POC/ansible/images/windows_10_iso/windows_10.iso"
-    #"~/Git_Project/Snare_Lab_POC/ansible/images/ubuntu_22_iso/ubuntu-22.iso"
+    "~/Git_Project/Snare_Lab_POC/ansible/images/ubuntu_22_iso/ubuntu-22.iso"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst.notes"
     "~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/105.conf"
@@ -55,7 +55,7 @@ transfer_files() {
   REMOTE_PATHS=(
     #"/var/lib/vz/template/iso/windows_server_2019.iso"
     #"/var/lib/vz/template/iso/windows_10.iso"
-    #"/var/lib/vz/template/iso/ubuntu-22.iso"
+    "/var/lib/vz/template/iso/ubuntu-22.iso"
     "/var/lib/vz/dump/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst"
     "/var/lib/vz/dump/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst.notes"
     "/etc/pve/qemu-server/105.conf"
