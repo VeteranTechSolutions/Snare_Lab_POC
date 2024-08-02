@@ -32,8 +32,8 @@ prepare_drivers() {
 }
 
 # Define the next script variables
-NEXT_SCRIPT="task_terraforming.sh"
-NEXT_SCRIPT_DIR=~/Git_Project/Snare_Lab_POC/terraform
+NEXT_SCRIPT="task_templating.sh"
+NEXT_SCRIPT_DIR=~/Git_Project/Snare_Lab_POC/packer
 
 run_next_script() {
   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT $NEXT_SCRIPT"
