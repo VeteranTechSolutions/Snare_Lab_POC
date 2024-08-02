@@ -21,10 +21,10 @@ resource "proxmox_virtual_environment_pool" "training_pool" {
 }
 
 data "proxmox_virtual_environment_vms" "sc" {
-  tags      = ["traininglab-sc"]
+  tags      = ["traininglab_sc"]
 }
 
-data "proxmox_virtual_environment_vms" "server" {
+data "proxmox_virtual_environment_vms" "ubuntu" {
   tags      = ["traininglab-server"]
 }
 
@@ -38,26 +38,26 @@ data "proxmox_virtual_environment_vms" "ws" {
 
 locals {
   vm_id_templates = {
-    workstation = data.proxmox_virtual_environment_vms.ws.vms[0].vm_id
-    win2019     = data.proxmox_virtual_environment_vms.win2019.vms[0].vm_id
-    ubuntu      = data.proxmox_virtual_environment_vms.server.vms[0].vm_id
+    win10      = data.proxmox_virtual_environment_vms.ws.vms[0].vm_id
+    win2019          = data.proxmox_virtual_environment_vms.win2019.vms[0].vm_id
+    ubuntu           = data.proxmox_virtual_environment_vms.ubuntu.vms[0].vm_id
     snare-central    = data.proxmox_virtual_environment_vms.sc.vms[0].vm_id
   }
 
   default_vm_config = {
-    memory  = 4096
-    cores   = 2
-    sockets = 1
-    disk_size = 60
+    memory      = 4096
+    cores       = 2
+    sockets     = 1
+    disk_size   = 60
   }
 }
 
 resource "proxmox_virtual_environment_vm" "vm" {
   for_each = {
-    Linux = local.vm_id_templates.ubuntu
-    WinServer         = local.vm_id_templates.win2019
-    Win10        = local.vm_id_templates.workstation
-    SnareCentral        = local.vm_id_templates.snare-central
+    Linux           = local.vm_id_templates.ubuntu
+    WinServer       = local.vm_id_templates.win2019
+    Win10           = local.vm_id_templates.workstation
+    SnareCentral    = local.vm_id_templates.snare-central
   }
 
   name = each.key
