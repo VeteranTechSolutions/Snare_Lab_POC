@@ -37,6 +37,20 @@ create_win10(){
   fi
 }
 
+create_win11_uefi(){
+  # Navigate to the Packer directory first
+  if [ -d "$PACKER_DIR" ]; then
+    cd "$PACKER_DIR/win11_uefi"
+    packer init .
+    echo "[+] Building Windows 10 template in: $(pwd)"
+    packer build .
+    cd "$PACKER_DIR"
+    log "Windows 11 UEFI template created successfully."
+  else
+    log "Packer directory not found!"
+  fi
+}
+
 create_win2019(){
   # Navigate to the Packer directory first
   if [ -d "$PACKER_DIR" ]; then
@@ -80,5 +94,6 @@ run_next_script() {
 source_env_POC
 create_win10
 create_win2019
+create_win11_uefi
 create_ubuntu
 run_next_script
