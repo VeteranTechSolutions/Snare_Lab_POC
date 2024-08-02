@@ -65,30 +65,15 @@ create_ubuntu(){
   fi
 }
 
-source_env_vagrant() {
-  ENV_PATH=~/Git_Project/Snare_Lab_POC/packer/win11/secrets-proxmox.sh
-  if [ -f $ENV_PATH ]; then
-    log "Sourcing secrets-proxmox.sh file..."
-    source $ENV_PATH
-  else
-    error_exit "secrets-proxmox.sh file not found at $ENV_PATH! Exiting..."
-  fi
-}
 
-build_win11(){
-
-log "Changing Directory to log ~/Git_Project/Snare_Lab_POC/packer/win11/"
-cd ~/Git_Project/Snare_Lab_POC/packer/win11/
-
-log "Running MAKE Build for windows-11-23h2-uefi-proxmox"
-make build-windows-11-23h2-uefi-proxmox
-
-}
+# Define the next script variables
+NEXT_SCRIPT="prepare-drivers.sh"
+NEXT_SCRIPT_DIR=~/Git_Project/Snare_Lab_POC/Setup
 
 run_next_script() {
-  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_terraforming.sh"
-  cd ~/Git_Project/Snare_Lab_POC/terraform || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/terraform"
-  ./task_terraforming.sh
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT $NEXT_SCRIPT"
+  cd "$NEXT_SCRIPT_DIR" || error_exit "Failed to change directory to $NEXT_SCRIPT_DIR"
+  ./"$NEXT_SCRIPT"
 }
 
 # Initialize each function in the desired order
@@ -96,6 +81,4 @@ source_env_POC
 create_win10
 create_win2019
 create_ubuntu
-source_env_vagrant
-build_win11
 run_next_script
