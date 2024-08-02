@@ -12,34 +12,23 @@ error_exit() {
 }
 
 # Define the directories and file paths
-TEMP_DIR="drivers.tmp"
-FINAL_DIR=~/Git_Project/Snare_Lab_POC/packer/win11/drivers
+FINAL_DIR=~/Git_Project/Snare_Lab_POC/packer/win11-uefi/drivers
 VIRTIO_ISO_PATH=~/Git_Project/Snare_Lab_POC/ansible/images/virtio-win.iso
 SPICE_TOOLS_URL="https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-0.141/spice-guest-tools-0.141.exe"
 
 # Prepare drivers and tools
 prepare_drivers() {
-  # Remove the temporary directory if it exists
-  rm -rf "$TEMP_DIR"
 
   # Create the final directory
   mkdir -p "$FINAL_DIR"
 
   # Extract the ISO contents
   log "Extracting VirtIO drivers..."
-  7z x -o"$TEMP_DIR" "$VIRTIO_ISO_PATH"
+  7z x -o"$FINAL_DIR" "$VIRTIO_ISO_PATH"
 
   # Download the SPICE Guest Tools
   log "Downloading SPICE Guest Tools..."
-  wget -O "$TEMP_DIR/spice-guest-tools.exe" "$SPICE_TOOLS_URL"
-
-  # Move extracted contents to the final directory
-  mv "$TEMP_DIR"/* "$FINAL_DIR"
-
-  # Clean up temporary directory
-  rm -rf "$TEMP_DIR"
-
-  log "Drivers and tools have been successfully prepared in the '$FINAL_DIR' directory."
+  wget -O "$FINAL_DIR/spice-guest-tools.exe" "$SPICE_TOOLS_URL"
 }
 
 # Define the next script variables
@@ -54,6 +43,8 @@ run_next_script() {
 
 # Run the preparation function
 prepare_drivers
+run_next_script
+
 
 # Run the next script
 run_next_script
