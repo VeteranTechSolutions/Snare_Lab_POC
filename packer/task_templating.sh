@@ -1,123 +1,101 @@
-terraform {
-  required_providers {
-    proxmox = {
-      source = "bpg/proxmox"
-    }
-  }
+#!/bin/bash
+
+LOGFILE=~/Git_Project/Snare_Lab_POC/setup.log
+
+log() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a $LOGFILE
 }
 
-provider "proxmox" {
-  endpoint  = "https://${var.pve_node_ip}:8006/api2/json"
-  api_token = "${var.tokenid}=${var.tokenkey}"
-  insecure  = true
-  ssh {
-    agent    = true
-  }
+error_exit() {
+  log "ERROR: $1"
+  exit 1
 }
 
-resource "proxmox_virtual_environment_pool" "training_pool" {
-  comment = "training resource pool"
-  pool_id = "TRAINING"
+source_env_POC() {
+  ENV_PATH=~/Git_Project/Snare_Lab_POC/.env
+  if [ -f $ENV_PATH ]; then
+    log "Sourcing .env file..."
+    source $ENV_PATH
+  else
+    error_exit ".env file not found at $ENV_PATH! Exiting..."
+  fi
 }
 
-data "proxmox_virtual_environment_vms" "sc" {
-  tags      = ["traininglab_sc"]
+PACKER_DIR=~/Git_Project/Snare_Lab_POC/packer
+
+create_win10(){
+  # Navigate to the Packer directory first
+  if [ -d "$PACKER_DIR" ]; then
+    cd "$PACKER_DIR/win10"
+    packer init .
+    echo "[+] Building Windows 10 template in: $(pwd)"
+    packer build .
+    cd "$PACKER_DIR"
+    log "Windows 10 template created successfully."
+  else
+    log "Packer directory not found!"
+  fi
 }
 
-data "proxmox_virtual_environment_vms" "ubuntu" {
-  tags      = ["traininglab-server"]
+create_win2019(){
+  # Navigate to the Packer directory first
+  if [ -d "$PACKER_DIR" ]; then
+    cd "$PACKER_DIR/win2019"
+    packer init .
+    echo "[+] Building Windows Server 2019 template in: $(pwd)"
+    packer build .
+    cd "$PACKER_DIR"
+    log "Windows Server 2019 template created successfully."
+  else
+    log "Packer directory not found!"
+  fi
 }
 
-data "proxmox_virtual_environment_vms" "win2019" {
-  tags      = ["traininglab-win2019"]
+create_ubuntu(){
+  # Navigate to the Packer directory first
+  if [ -d "$PACKER_DIR" ]; then
+    cd "$PACKER_DIR/ubuntu-server"
+    packer init .
+    echo "[+] Building Ubuntu Server template in: $(pwd)"
+    packer build .
+    cd "$PACKER_DIR"
+    log "Ubuntu Server template created successfully."
+  else
+    log "Packer directory not found!"
+  fi
 }
 
-data "proxmox_virtual_environment_vms" "ws" {
-  tags      = ["traininglab-ws"]
+source_env_vagrant() {
+  ENV_PATH=~/Git_Project/Snare_Lab_POC/packer/win11/secrets-proxmox.sh
+  if [ -f $ENV_PATH ]; then
+    log "Sourcing secrets-proxmox.sh file..."
+    source $ENV_PATH
+  else
+    error_exit "secrets-proxmox.sh file not found at $ENV_PATH! Exiting..."
+  fi
 }
 
-locals {
-  vm_id_templates = {
-    win10      = data.proxmox_virtual_environment_vms.ws.vms[0].vm_id
-    win2019          = data.proxmox_virtual_environment_vms.win2019.vms[0].vm_id
-    ubuntu           = data.proxmox_virtual_environment_vms.ubuntu.vms[0].vm_id
-    snare-central    = data.proxmox_virtual_environment_vms.sc.vms[0].vm_id
-  }
+build_win11(){
 
-  default_vm_config = {
-    memory      = 4096
-    cores       = 2
-    sockets     = 1
-    disk_size   = 60
-  }
+log "Changing Directory to log ~/Git_Project/Snare_Lab_POC/packer/win11/"
+cd ~/Git_Project/Snare_Lab_POC/packer/win11/
+
+log "Running MAKE Build for windows-11-23h2-uefi-proxmox"
+make build-windows-11-23h2-uefi-proxmox
+
 }
 
-resource "proxmox_virtual_environment_vm" "vm" {
-  for_each = {
-    Linux           = local.vm_id_templates.ubuntu
-    WinServer       = local.vm_id_templates.win2019
-    Win10           = local.vm_id_templates.workstation
-    SnareCentral    = local.vm_id_templates.snare-central
-  }
-
-  name = each.key
-  pool_id = proxmox_virtual_environment_pool.training_pool.pool_id
-  node_name = var.pve_node
-  on_boot = false
-
-  clone {
-    vm_id = each.value
-    full = false
-    retries = 2
-  }
-
-  agent {
-    enabled = true
-  } 
-
-  memory {
-    dedicated = each.key == "Linux" ? 2048 : local.default_vm_config.memory
-    dedicated = each.key == "SnareCentral" ? 16000 : local.default_vm_config.memory
-  }
-
-  cpu {
-    cores       = local.default_vm_config.cores
-    sockets     = local.default_vm_config.sockets
-    dedicated = each.key == "SnareCentral" ? 4 : local.default_vm_config.cores
-  }
-
-  disk {
-    interface    = "scsi0"
-    file_format = "raw"
-    size    = local.default_vm_config.disk_size
-    dedicated = each.key == "SnareCentral" ? 500 : local.default_vm_config.disk_size
-    datastore_id = var.storage_name
-  }
-
-  network_device {
-    bridge = var.netbridge
-  }
-
-  lifecycle {
-    ignore_changes = [
-      disk,
-    ]
-  }
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_terraforming.sh"
+  cd ~/Git_Project/Snare_Lab_POC/terraform || error_exit "Failed to change directory to ~/Git_Project/Snare_Lab_POC/terraform"
+  ./task_terraforming.sh
 }
 
-##################### OUTPUT BLOCK #####################
-
-output "ansible_inventory" {
-  value = templatefile("${path.module}/inventory_hosts.tmpl", {
-    linux_ips = {
-      "Linux" = proxmox_virtual_environment_vm.Linux.ipv4_addresses[1][0]
-    },
-    snare_central_ips = {
-      "snare-central" = proxmox_virtual_environment_vm.snare-central.ipv4_addresses[1][0]
-    },
-    windows_ips = {
-      "WinServer"  = proxmox_virtual_environment_vm.WinServer.ipv4_addresses[0][0]
-      "Win10" = proxmox_virtual_environment_vm.Win10.ipv4_addresses[0][0]
-    }
-  })
-}
+# Initialize each function in the desired order
+source_env_POC
+create_win10
+create_win2019
+create_ubuntu
+source_env_vagrant
+build_win11
+run_next_script
