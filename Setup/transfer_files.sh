@@ -105,9 +105,9 @@ transfer_files() {
 
 
  run_next_script() {
-   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT task_templating.sh"
-   cd ~/Git_Project/Snare_Lab_POC/packer
-   ./task_templating.sh
+   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT prepare-drivers.sh"
+   cd ~/Git_Project/Snare_Lab_POC/Setup
+   ./prepare-drivers.sh
  }
 
 source_env
