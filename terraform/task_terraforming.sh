@@ -11,7 +11,14 @@ error_exit() {
   exit 1
 }
 
+working_directory=~/Git_Project/Snare_Lab_POC/terraform
+
 run_terraform() {
+
+log "Change to Present Working Directory to $worworking_directory"
+cd $worworking_directory
+
+
   echo -e "\n\n####################### Starting Terraform Apply #######################\n" | tee -a $LOGFILE
 
   log "Initializing Terraform..."
