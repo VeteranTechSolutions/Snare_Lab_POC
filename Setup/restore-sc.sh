@@ -25,16 +25,15 @@ source_env_POC() {
 # Load environment variables
 source_env_POC
 
-# Variables from .env
+# Variables sourced from .env
 BACKUP_FILE="/var/lib/vz/dump/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst"
 STORAGE_NAME="local-zfs"
-PROXMOX_API_URL="https://${PROXMOX_NODE_IP}:8006/api2/json"
 
-# Function to find the next available VM ID
+# Function to find the next available VM ID using SSH
 get_next_vm_id() {
   local max_id
-  max_id=$(curl -s -k -H "Authorization: PVEAPIToken=${PROXMOX_API_ID}=${PROXMOX_API_TOKEN}" \
-    "${PROXMOX_API_URL}/cluster/resources?type=vm" | jq '.data[].vmid' | sort -n | tail -1)
+  max_id=$(sshpass -p "$PROXMOX_PASSWORD" ssh "$PROXMOX_USER@$PROXMOX_NODE_IP" \
+    "qm list | awk 'NR>1 {print \$1}' | sort -n | tail -1")
 
   if [[ -z "$max_id" ]]; then
     next_id=100
@@ -46,22 +45,19 @@ get_next_vm_id() {
 
 # Find the next available VM ID
 NEXT_VM_ID=$(get_next_vm_id)
-echo "Next available VM ID is: $NEXT_VM_ID"
+log "Next available VM ID is: $NEXT_VM_ID"
 
-# Restore the VM
+# Restore the VM using SSH
 restore_vm() {
-  local response
-  response=$(curl -s -k -X POST -H "Authorization: PVEAPIToken=${PROXMOX_API_ID}=${PROXMOX_API_TOKEN}" \
-    -d "vmid=$NEXT_VM_ID" \
-    -d "storage=$STORAGE_NAME" \
-    -d "archive=$BACKUP_FILE" \
-    "${PROXMOX_API_URL}/nodes/${PROXMOX_NODE_NAME}/vzdump" | jq '.data')
+  log "Attempting to restore VM with ID $NEXT_VM_ID from backup $BACKUP_FILE"
+  sshpass -p "$PROXMOX_PASSWORD" ssh "$PROXMOX_USER@$PROXMOX_NODE_IP" \
+    "qmrestore $BACKUP_FILE $NEXT_VM_ID --storage $STORAGE_NAME"
 
-  if [[ "$response" == "null" ]]; then
-    echo "Failed to restore VM."
-    return 1
+  if [[ $? -eq 0 ]]; then
+    log "VM restored successfully with ID $NEXT_VM_ID."
   else
-    echo "VM restored successfully with ID $NEXT_VM_ID."
+    log "Failed to restore VM."
+    return 1
   fi
 }
 
@@ -76,5 +72,4 @@ run_next_script() {
 }
 
 # Attempt to restore the VM
-restore_vm
-run_next_script
+restore_vm && run_next_script
