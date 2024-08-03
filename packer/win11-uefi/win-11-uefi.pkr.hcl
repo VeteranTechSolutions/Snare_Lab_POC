@@ -150,6 +150,11 @@ build {
 
   provisioner "powershell" {
     use_pwsh = true
+    script   = "../scripts/debloat-windows.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
     script   = "../scripts/optimize.ps1"
   }
 }
