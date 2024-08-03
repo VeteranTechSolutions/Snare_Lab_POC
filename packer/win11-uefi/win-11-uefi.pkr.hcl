@@ -140,7 +140,7 @@ build {
 
   provisioner "powershell" {
     use_pwsh = true
-    script   = "../scripts/enable-winrm.ps1"
+    script   = "../scripts/provision-winrm.ps1"
   }
 
   provisioner "powershell" {
@@ -161,6 +161,9 @@ build {
   provisioner "powershell" {
     use_pwsh = true
     script   = "../scripts/debloat-windows.ps1"
+  }
+
+  provisioner "windows-restart" {
   }
 
   provisioner "powershell" {
