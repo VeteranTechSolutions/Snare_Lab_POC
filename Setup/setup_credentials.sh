@@ -23,9 +23,9 @@ prepare_project_scripts() {
   #chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/windows_server_2019_iso/reassemble_windows_server_2019.iso.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/ansible/images/snare_central_iso/reassemble_snare_central.iso.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/transfer_files.sh
-  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/transfer_files.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/Setup/restore-sc.sh
-  chmod +x ~/Git_Project/Snare_Lab_POC/packer/prepare-drivers.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/Setup/prepare-drivers.sh
+  chmod +x ~/Git_Project/Snare_Lab_POC/packer/task_templating.sh
   chmod +x ~/Git_Project/Snare_Lab_POC/terraform/task_terraforming.sh
   
 }
