@@ -141,16 +141,6 @@ build {
 
   provisioner "powershell" {
     use_pwsh = true
-    script   = "../scripts/provision-winrm.ps1"
-  }
-
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/enable-ssh.ps1"
-  }
-
-  provisioner "powershell" {
-    use_pwsh = true
     script   = "../scripts/provision-cloudbase-init.ps1"
   }
 
