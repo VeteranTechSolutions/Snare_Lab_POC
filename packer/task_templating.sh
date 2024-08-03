@@ -40,7 +40,7 @@ create_win10(){
 create_win11_uefi(){
   # Navigate to the Packer directory first
   if [ -d "$PACKER_DIR" ]; then
-    cd "$PACKER_DIR/win11_uefi"
+    cd "$PACKER_DIR/win11-uefi"
     packer init .
     echo "[+] Building Windows 10 template in: $(pwd)"
     packer build .
