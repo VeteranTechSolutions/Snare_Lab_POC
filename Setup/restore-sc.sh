@@ -26,7 +26,7 @@ source_env_POC() {
 source_env_POC
 
 # Variables from .env
-BACKUP_FILE="/var/lib/vz/dump/vzdump-qemu-106-2024_07_17-10_57_18.vma.zst"
+BACKUP_FILE="/var/lib/vz/dump/vzdump-qemu-105-2024_07_25-19_42_45.vma.zst"
 STORAGE_NAME="local-zfs"
 PROXMOX_API_URL="https://${PROXMOX_NODE_IP}:8006/api2/json"
 
