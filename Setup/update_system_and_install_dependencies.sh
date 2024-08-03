@@ -21,7 +21,7 @@ update_system_and_install_dependencies() {
   echo -e "\n\n####################### Installing Required Packages #######################\n" | tee -a $LOGFILE
   
   log "Installing required packages: git, gpg, nano, tmux, curl, gnupg, software-properties-common, mkisofs, python3-venv, python3, python3-pip, unzip, mono-complete, coreutils..."
-  sudo apt install -y git gpg nano tmux curl lsb-release gnupg p7zip-full sshpass software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils || error_exit "Failed to install required packages."
+  sudo apt install -y git gpg nano tmux curl lsb-release gnupg jq sshpass software-properties-common mkisofs python3-venv python3 python3-pip unzip mono-complete coreutils || error_exit "Failed to install required packages."
   log "Installation of required packages completed."
 
   echo -e "\033[1;32m
