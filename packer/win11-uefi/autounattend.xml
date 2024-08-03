@@ -163,6 +163,29 @@
                     <Order>3</Order>
                     <CommandLine>PowerShell -WindowStyle Maximized -Command "Get-PSDrive -PSProvider FileSystem | ForEach-Object {$p = Join-Path $_.Root provision-autounattend.ps1; if (Test-Path $p) {&amp;$p}}"</CommandLine>
                 </SynchronousCommand>
+								<SynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <!-- Enable SSH service -->
+                    <CommandLine>powershell.exe -c Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>5</Order>
+                    <!-- Enable SSH service -->
+                    <CommandLine>powershell.exe -c Start-Service sshd</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>6</Order>
+                    <!-- Enable SSH service -->
+                    <CommandLine>powershell.exe -c Set-Service -Name sshd -StartupType 'Automatic'</CommandLine>
+                    <RequiresUserInput>false</RequiresUserInput>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c wmic useraccount where "name='Administrator'" set PasswordExpires=FALSE</CommandLine>
+                    <Order>7</Order>
+                    <Description>Disable password expiration for TrainingLab user</Description>
+                </SynchronousCommand>
             </FirstLogonCommands>
         </component>
     </settings>
