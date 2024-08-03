@@ -105,9 +105,9 @@ transfer_files() {
 
 
  run_next_script() {
-   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT prepare-drivers.sh"
+   log "AUTOMATICALLY RUNNING THE NEXT SCRIPT restore-sc.sh"
    cd ~/Git_Project/Snare_Lab_POC/Setup
-   ./prepare-drivers.sh
+   ./restore-sc.sh
  }
 
 source_env
