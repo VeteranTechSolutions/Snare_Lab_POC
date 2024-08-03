@@ -65,5 +65,16 @@ restore_vm() {
   fi
 }
 
+# Define the next script variables
+NEXT_SCRIPT="prepare-drivers.sh"
+NEXT_SCRIPT_DIR=~/Git_Project/Snare_Lab_POC/Setup
+
+run_next_script() {
+  log "AUTOMATICALLY RUNNING THE NEXT SCRIPT $NEXT_SCRIPT"
+  cd "$NEXT_SCRIPT_DIR" || error_exit "Failed to change directory to $NEXT_SCRIPT_DIR"
+  ./"$NEXT_SCRIPT"
+}
+
 # Attempt to restore the VM
 restore_vm
+run_next_script
