@@ -12,7 +12,7 @@ error_exit() {
 }
 
 # Define the directories and file paths
-FINAL_DIR=~/Git_Project/Snare_Lab_POC/packer/win11-uefi/drivers
+FINAL_DIR=~/Git_Project/Snare_Lab_POC/packer/drivers
 VIRTIO_ISO_PATH=~/Git_Project/Snare_Lab_POC/ansible/images/virtio-win.iso
 SPICE_TOOLS_URL="https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-0.141/spice-guest-tools-0.141.exe"
 
