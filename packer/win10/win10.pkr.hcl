@@ -72,9 +72,72 @@ source "proxmox-iso" "traininglab-ws" {
 build {
   sources = ["sources.proxmox-iso.traininglab-ws"]
   
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/disable-windows-updates.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/disable-windows-defender.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/remove-one-drive.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/remove-apps.ps1"
+  }
+
+  provisioner "windows-restart" {
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/provision.ps1"
+  }
+
   provisioner "windows-update" {
     search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
     update_limit = 25
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/enable-remote-desktop.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/enable-winrm.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/enable-ssh.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/provision-cloudbase-init.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/eject-media.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/debloat-windows.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/optimize.ps1"
   }
 
   provisioner "file" {
