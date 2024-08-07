@@ -44,31 +44,21 @@ source "proxmox-iso" "traininglab-win2019" {
     iso_storage_pool = "local"
     cd_label         = "PROVISION"
     cd_files = [
-      "../drivers/amd64/*",
-      "../drivers/Balloon/*",
-      "../drivers/cert/*",
-      "../drivers/data/*",
-      "../drivers/fwcfg/*",
-      "../drivers/guest-agent/*",
-      "../drivers/i386/*",
-      "../drivers/NetKVM/*",
-      "../drivers/pvpanic/*",
-      "../drivers/qemufwcfg/*",
-      "../drivers/qemupciserial/*",
-      "../drivers/qxl/*",
-      "../drivers/qxldod/*",
-      "../drivers/smbus/*",
-      "../drivers/sriov/*",
-      "../drivers/viofs/*",
-      "../drivers/viogpudo/*",
-      "../drivers/vioinput/*",
-      "../drivers/viorng/*",
-      "../drivers/vioscsi/*",
-      "../drivers/vioserial/*",
-      "../drivers/viostor/*",
-      "../drivers/virtio-win_license.txt",
-      "../drivers/virtio-win-gt-x64.msi",
-      "../drivers/virtio-win-gt-x86.msi",
+      "../drivers/NetKVM/2k19/amd64/*.cat",
+      "../drivers/NetKVM/2k19/amd64/*.inf",
+      "../drivers/NetKVM/2k19/amd64/*.sys",
+      "../drivers/qxldod/2k19/amd64/*.cat",
+      "../drivers/qxldod/2k19/amd64/*.inf",
+      "../drivers/qxldod/2k19/amd64/*.sys",
+      "../drivers/vioscsi/2k19/amd64/*.cat",
+      "../drivers/vioscsi/2k19/amd64/*.inf",
+      "../drivers/vioscsi/2k19/amd64/*.sys",
+      "../drivers/vioserial/2k19/amd64/*.cat",
+      "../drivers/vioserial/2k19/amd64/*.inf",
+      "../drivers/vioserial/2k19/amd64/*.sys",
+      "../drivers/viostor/2k19/amd64/*.cat",
+      "../drivers/viostor/2k19/amd64/*.inf",
+      "../drivers/viostor/2k19/amd64/*.sys",
       "../drivers/spice-guest-tools.exe",
       "../drivers/virtio-win-guest-tools.exe",
       "../scripts/provision-autounattend.ps1",
@@ -97,7 +87,7 @@ source "proxmox-iso" "traininglab-win2019" {
 
   disks {
     type              = "scsi"
-    disk_size         = "50G"
+    disk_size         = "100G"
     storage_pool = var.storage_name
     discard = true
     io_thread = true
@@ -135,9 +125,6 @@ build {
     script   = "../scripts/remove-apps.ps1"
   }
 
-  provisioner "windows-restart" {
-  }
-
   provisioner "powershell" {
     use_pwsh = true
     script   = "../scripts/provision-guest-tools-qemu-kvm.ps1"
@@ -146,13 +133,9 @@ build {
   provisioner "windows-restart" {
   }
 
-
   provisioner "powershell" {
     use_pwsh = true
     script   = "../scripts/provision.ps1"
-  }
-
-  provisioner "windows-restart" {
   }
 
   #provisioner "windows-update" {
@@ -166,6 +149,7 @@ build {
   }
 
   provisioner "windows-restart" {
+    restart_timeout = "15m" # Increase this if needed
   }
 
   provisioner "powershell" {
@@ -179,6 +163,7 @@ build {
   }
 
   provisioner "windows-restart" {
+    restart_timeout = "15m" # Increase this if needed
   }
 
   provisioner "powershell" {
