@@ -86,9 +86,9 @@ source "proxmox-iso" "traininglab-server" {
 build {
   sources = ["sources.proxmox-iso.traininglab-server"]
 
-  #provisioner "shell" {
-  #  inline = [
-  #    "sudo apt update && sudo apt upgrade -y",
-  #  ]
-  #}
+  provisioner "shell" {
+    inline = [
+      "sudo apt update && sudo apt upgrade -y",
+    ]
+  }
 }
