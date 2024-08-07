@@ -2,12 +2,6 @@ Set-StrictMode -Version Latest
 $ProgressPreference = 'SilentlyContinue'
 $ErrorActionPreference = 'Stop'
 trap {
-    #Write-Host
-    #Write-Host 'whoami from autounattend:'
-    #Get-Content C:\whoami-autounattend.txt | ForEach-Object { Write-Host "whoami from autounattend: $_" }
-    #Write-Host 'whoami from current WinRM session:'
-    #whoami /all >C:\whoami-winrm.txt
-    #Get-Content C:\whoami-winrm.txt | ForEach-Object { Write-Host "whoami from winrm: $_" }
     Write-Host
     Write-Host "ERROR: $_"
     ($_.ScriptStackTrace -split '\r?\n') -replace '^(.*)$','ERROR: $1' | Write-Host
@@ -18,7 +12,7 @@ trap {
     Exit 1
 }
 
-# enable TLS 1.2.
+# Enable TLS 1.2.
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol `
     -bor [Net.SecurityProtocolType]::Tls12
 
@@ -34,31 +28,25 @@ if (!(New-Object System.Security.Principal.WindowsPrincipal(
 
 Add-Type -A System.IO.Compression.FileSystem
 
-# install Guest Additions.
+# Install Guest Additions.
 $systemVendor = (Get-CimInstance -ClassName Win32_ComputerSystemProduct -Property Vendor).Vendor
 if ($systemVendor -eq 'QEMU') {
-    # do nothing. this was installed in provision-guest-tools-qemu-kvm.ps1.
-} elseif ($systemVendor -eq 'Microsoft Corporation') {
-    # do nothing. Hyper-V enlightments are already bundled with Windows.
-} elseif ($systemVendor -eq 'VMware, Inc.') {
-    # do nothing. VMware Tools were already installed by provision-vmtools.ps1 (executed from autounattend.xml).
+    # Do nothing. This was installed in provision-guest-tools-qemu-kvm.ps1.
 } else {
     throw "Cannot install Guest Additions: Unsupported system ($systemVendor)."
 }
 
-Write-Host 'Setting the vagrant account properties...'
-# see the ADS_USER_FLAG_ENUM enumeration at https://msdn.microsoft.com/en-us/library/aa772300(v=vs.85).aspx
-$AdsScript              = 0x00001
-$AdsAccountDisable      = 0x00002
-$AdsNormalAccount       = 0x00200
-$AdsDontExpirePassword  = 0x10000
-$account = [ADSI]'WinNT://./vagrant'
-$account.Userflags = $AdsNormalAccount -bor $AdsDontExpirePassword
-$account.SetInfo()
+# Define ADSI user flag constants
+$AdsScript = 0x00001
+$AdsAccountDisable = 0x00002
+$AdsNormalAccount = 0x00200
+$AdsDontExpirePassword = 0x10000
 
+# Set the Administrator account properties
 Write-Host 'Setting the Administrator account properties...'
 $account = [ADSI]'WinNT://./Administrator'
-$account.Userflags = $AdsNormalAccount -bor $AdsDontExpirePassword -bor $AdsAccountDisable
+$account.Userflags = $AdsNormalAccount -bor $AdsDontExpirePassword 
+#-bor $AdsAccountDisable
 $account.SetInfo()
 
 Write-Host 'Disabling Automatic Private IP Addressing (APIPA)...'
