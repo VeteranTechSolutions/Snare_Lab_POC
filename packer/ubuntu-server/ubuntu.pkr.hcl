@@ -13,16 +13,16 @@ source "proxmox-iso" "traininglab-server" {
   username     = var.proxmox_api_id
   token        = var.proxmox_api_token
 
-  iso_file     = "local:iso/ubuntu-22.iso" #-- uncomment if you want to use local iso file and comment the next four lines
-  #iso_checksum             = "sha256:45f873de9f8cb637345d6e66a583762730bbea30277ef7b32c9c3bd6700a32b2"
-  #iso_url                  = "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso"
+  #iso_file     = "local:iso/ubuntu-22.iso" #-- uncomment if you want to use local iso file and comment the next four lines
+  iso_checksum             = "sha256:45f873de9f8cb637345d6e66a583762730bbea30277ef7b32c9c3bd6700a32b2"
+  iso_url                  = "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso"
   iso_storage_pool         = "local"
   iso_download_pve = true
 
   communicator             = "ssh"
   ssh_username             = var.lab_username
   ssh_password             = var.lab_password
-  ssh_timeout              = "60m"
+  ssh_timeout              = "30m"
   qemu_agent               = true
   cores                    = 6
   cpu_type                  = "host"
@@ -32,7 +32,7 @@ source "proxmox-iso" "traininglab-server" {
   template_description     = "TrainingLab Ubuntu Server Template"
   insecure_skip_tls_verify = true
   unmount_iso = true
-  task_timeout = "60m"
+  task_timeout = "30m"
   http_directory           = "server"   # or server files inside the http folder on a container inside proxmox host
 
   additional_iso_files {
@@ -85,4 +85,10 @@ source "proxmox-iso" "traininglab-server" {
 
 build {
   sources = ["sources.proxmox-iso.traininglab-server"]
+
+  #provisioner "shell" {
+  #  inline = [
+  #    "sudo apt update && sudo apt upgrade -y",
+  #  ]
+  #}
 }
