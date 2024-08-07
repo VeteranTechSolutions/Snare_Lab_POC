@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.3"
+      version = ">= 1.1.8"
       source  = "github.com/hashicorp/proxmox"
     }
     windows-update = {
@@ -38,20 +38,47 @@ source "proxmox-iso" "traininglab-ws" {
   unmount_iso = true
   task_timeout = "60m"
 
-  additional_iso_files {
-    cd_files =["autounattend.xml"]
-    cd_label = "auto-win10.iso"
+   additional_iso_files {
+    device           = "ide0"
+    unmount          = true
     iso_storage_pool = "local"
-    unmount      = true
-
-  }
-
-  additional_iso_files {
-    device       = "sata0"
-    iso_url     = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso"
-    iso_checksum = "none"
-    iso_storage_pool = "local"
-    unmount      = true
+    cd_label         = "PROVISION"
+    cd_files = [
+      "../drivers/NetKVM/w10/amd64/*.cat",
+      "../drivers/NetKVM/w10/amd64/*.inf",
+      "../drivers/NetKVM/w10/amd64/*.sys",
+      "../drivers/qxldod/w10/amd64/*.cat",
+      "../drivers/qxldod/w10/amd64/*.inf",
+      "../drivers/qxldod/w10/amd64/*.sys",
+      "../drivers/vioscsi/w10/amd64/*.cat",
+      "../drivers/vioscsi/w10/amd64/*.inf",
+      "../drivers/vioscsi/w10/amd64/*.sys",
+      "../drivers/vioserial/w10/amd64/*.cat",
+      "../drivers/vioserial/w10/amd64/*.inf",
+      "../drivers/vioserial/w10/amd64/*.sys",
+      "../drivers/viostor/w10/amd64/*.cat",
+      "../drivers/viostor/w10/amd64/*.inf",
+      "../drivers/viostor/w10/amd64/*.sys",
+      "../drivers/spice-guest-tools.exe",
+      "../drivers/virtio-win-guest-tools.exe",
+      "../scripts/provision-autounattend.ps1",
+      "../scripts/provision-guest-tools-qemu-kvm.ps1",
+      "../scripts/provision-openssh.ps1",
+      "../scripts/provision-psremoting.ps1",
+      "../scripts/provision-pwsh.ps1",
+      "../scripts/provision-winrm.ps1",
+      "../scripts/disable-windows-updates.ps1",
+      "../scripts/remove-one-drive.ps1",
+      "../scripts/remove-apps.ps1",
+      "../scripts/disable-windows-defender.ps1",
+      "../scripts/enable-remote-desktop.ps1",
+      "../scripts/provision-cloudbase-init.ps1",
+      #"../scripts/debloat-windows.ps1",
+      "../scripts/optimize.ps1",
+      "../scripts/Windows10SysPrepDebloater.ps1",
+      "../scripts/eject-media.ps1",
+      "autounattend.xml",
+    ]
   }
 
   network_adapters {
@@ -74,6 +101,11 @@ build {
   
   provisioner "powershell" {
     use_pwsh = true
+    script   = "../scripts/enable-remote-desktop.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
     script   = "../scripts/disable-windows-updates.ps1"
   }
 
@@ -92,6 +124,11 @@ build {
     script   = "../scripts/remove-apps.ps1"
   }
 
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/provision-guest-tools-qemu-kvm.ps1"
+  }
+
   provisioner "windows-restart" {
   }
 
@@ -100,39 +137,27 @@ build {
     script   = "../scripts/provision.ps1"
   }
 
-  provisioner "windows-update" {
-    search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-    update_limit = 25
-  }
-
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/enable-remote-desktop.ps1"
-  }
-
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/provision-winrm.ps1"
-  }
-
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/enable-ssh.ps1"
-  }
+  #provisioner "windows-update" {
+  #  search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+  #  update_limit = 25
+  #}
 
   provisioner "powershell" {
     use_pwsh = true
     script   = "../scripts/provision-cloudbase-init.ps1"
   }
 
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/eject-media.ps1"
+  provisioner "windows-restart" {
   }
 
   provisioner "powershell" {
     use_pwsh = true
-    script   = "../scripts/debloat-windows.ps1"
+    script   = "../scripts/eject-media.ps1"
+  }
+  
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/Windows10SysPrepDebloater.ps1"
   }
 
   provisioner "windows-restart" {
@@ -143,14 +168,7 @@ build {
     script   = "../scripts/optimize.ps1"
   }
 
-  provisioner "file" {
-    source      = "ws-sysprep.xml"
-    destination = "C:/Users/Public/sysprep.xml"
+  provisioner "windows-restart" {
   }
 
-  provisioner "windows-shell" {
-    inline = [
-    "c:\\windows\\system32\\sysprep\\sysprep.exe /mode:vm /generalize /oobe /shutdown /unattend:C:\\Users\\Public\\sysprep.xml",
-    ]
-  }
 }
