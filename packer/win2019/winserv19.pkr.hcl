@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.3"
+      version = ">= 1.1.8"
       source  = "github.com/hashicorp/proxmox"
     }
     windows-update = {
@@ -39,18 +39,56 @@ source "proxmox-iso" "traininglab-win2019" {
   task_timeout = "60m"
 
   additional_iso_files {
-    cd_files =["autounattend.xml"]
-    cd_label = "auto-win2019.iso"
+    device           = "ide0"
+    unmount          = true
     iso_storage_pool = "local"
-    unmount      = true
-  }
-
-  additional_iso_files {
-    device       = "sata0"
-    iso_url     = "https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso"
-    iso_checksum = "none"
-    iso_storage_pool = "local"
-    unmount      = true
+    cd_label         = "PROVISION"
+    cd_files = [
+      "../drivers/amd64/*",
+      "../drivers/Balloon/*",
+      "../drivers/cert/*",
+      "../drivers/data/*",
+      "../drivers/fwcfg/*",
+      "../drivers/guest-agent/*",
+      "../drivers/i386/*",
+      "../drivers/NetKVM/*",
+      "../drivers/pvpanic/*",
+      "../drivers/qemufwcfg/*",
+      "../drivers/qemupciserial/*",
+      "../drivers/qxl/*",
+      "../drivers/qxldod/*",
+      "../drivers/smbus/*",
+      "../drivers/sriov/*",
+      "../drivers/viofs/*",
+      "../drivers/viogpudo/*",
+      "../drivers/vioinput/*",
+      "../drivers/viorng/*",
+      "../drivers/vioscsi/*",
+      "../drivers/vioserial/*",
+      "../drivers/viostor/*",
+      "../drivers/virtio-win_license.txt",
+      "../drivers/virtio-win-gt-x64.msi",
+      "../drivers/virtio-win-gt-x86.msi",
+      "../drivers/spice-guest-tools.exe",
+      "../drivers/virtio-win-guest-tools.exe",
+      "../scripts/provision-autounattend.ps1",
+      "../scripts/provision-guest-tools-qemu-kvm.ps1",
+      "../scripts/provision-openssh.ps1",
+      "../scripts/provision-psremoting.ps1",
+      "../scripts/provision-pwsh.ps1",
+      "../scripts/provision-winrm.ps1",
+      "../scripts/disable-windows-updates.ps1",
+      "../scripts/remove-one-drive.ps1",
+      "../scripts/remove-apps.ps1",
+      "../scripts/disable-windows-defender.ps1",
+      "../scripts/enable-remote-desktop.ps1",
+      "../scripts/provision-cloudbase-init.ps1",
+      #"../scripts/debloat-windows.ps1",
+      "../scripts/optimize.ps1",
+      "../scripts/Windows10SysPrepDebloater.ps1",
+      "../scripts/eject-media.ps1",
+      "autounattend.xml",
+    ]
   }
 
   network_adapters {
@@ -72,19 +110,83 @@ source "proxmox-iso" "traininglab-win2019" {
 build {
   sources = ["sources.proxmox-iso.traininglab-win2019"]
   
-  provisioner "windows-update" {
-    search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
-    update_limit = 25
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/enable-remote-desktop.ps1"
   }
 
-  provisioner "file" {
-    source      = "server-sysprep.xml"
-    destination = "C:/Users/Public/sysprep.xml"
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/disable-windows-updates.ps1"
   }
 
-  provisioner "windows-shell" {
-    inline = [
-    "c:\\windows\\system32\\sysprep\\sysprep.exe /mode:vm /generalize /oobe /shutdown /unattend:C:\\Users\\Public\\sysprep.xml",
-    ]
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/disable-windows-defender.ps1"
   }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/remove-one-drive.ps1"
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/remove-apps.ps1"
+  }
+
+  provisioner "windows-restart" {
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/provision-guest-tools-qemu-kvm.ps1"
+  }
+
+  provisioner "windows-restart" {
+  }
+
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/provision.ps1"
+  }
+
+  provisioner "windows-restart" {
+  }
+
+  #provisioner "windows-update" {
+  #  search_criteria = "AutoSelectOnWebSites=1 and IsInstalled=0"
+  #  update_limit = 25
+  #}
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/provision-cloudbase-init.ps1"
+  }
+
+  provisioner "windows-restart" {
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/eject-media.ps1"
+  }
+  
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/Windows10SysPrepDebloater.ps1"
+  }
+
+  provisioner "windows-restart" {
+  }
+
+  provisioner "powershell" {
+    use_pwsh = true
+    script   = "../scripts/optimize.ps1"
+  }
+
+  provisioner "windows-restart" {
+  }
+
 }
