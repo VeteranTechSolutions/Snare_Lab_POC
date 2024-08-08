@@ -27,18 +27,86 @@
     - name: Create Telegraf configuration file
       win_copy:
         content: |
-          # Global Agent Configuration
-          [agent]
-            interval = "10s"
-            round_interval = true
-            metric_batch_size = 1000
-            metric_buffer_limit = 10000
-            collection_jitter = "0s"
-            flush_interval = "10s"
-            flush_jitter = "0s"
-            precision = ""
-            hostname = ""
-            omit_hostname = false
+          ###############################################################################
+          # Windows Performance Counters plugin.
+          # These are the recommended method of monitoring system metrics on windows,
+          # as the regular system plugins (inputs.cpu, inputs.mem, etc.) rely on WMI,
+          # which utilize more system resources.
+          #
+          # See more configuration examples at:
+          #   https://github.com/influxdata/telegraf/tree/master/plugins/inputs/win_perf_counters
+          [[inputs.win_perf_counters]]
+            [[inputs.win_perf_counters.object]]
+              # Processor usage, alternative to native, reports on a per core.
+              ObjectName = "Processor"
+              Instances = ["*"]
+              Counters = [
+                "% Idle Time",
+                "% Interrupt Time",
+                "% Privileged Time",
+                "% User Time",
+                "% Processor Time",
+              ]
+              Measurement = "win_cpu"
+              # Set to true to include _Total instance when querying for all (*).
+              #IncludeTotal=false
+            [[inputs.win_perf_counters.object]]
+              # Disk times and queues
+              ObjectName = "LogicalDisk"
+              Instances = ["*"]
+              Counters = [
+                "% Idle Time",
+                "% Disk Time","% Disk Read Time",
+                "% Disk Write Time",
+                "% User Time",
+                "Current Disk Queue Length",
+              ]
+              Measurement = "win_disk"
+              # Set to true to include _Total instance when querying for all (*).
+              #IncludeTotal=false
+            [[inputs.win_perf_counters.object]]
+              ObjectName = "System"
+              Counters = [
+                "Context Switches/sec",
+                "System Calls/sec",
+              ]
+              Instances = ["_Total"]
+              Measurement = "win_system"
+              # Set to true to include _Total instance when querying for all (*).
+              IncludeTotal=true
+            [[inputs.win_perf_counters.object]]
+              # Example query where the Instance portion must be removed to get data back,
+              # such as from the Memory object.
+              ObjectName = "Memory"
+              Counters = [
+                "Available Bytes",
+                "Cache Faults/sec",
+                "Demand Zero Faults/sec",
+                "Page Faults/sec",
+                "Pages/sec",
+                "Transition Faults/sec",
+                "Pool Nonpaged Bytes",
+                "Pool Paged Bytes",
+              ]
+              # Use 6 x - to remove the Instance bit from the query.
+              Instances = ["_Total"]
+              Measurement = "win_mem"
+              # Set to true to include _Total instance when querying for all (*).
+              IncludeTotal=true
+
+            [[inputs.win_perf_counters.object]]
+              # Example query where the Instance portion must be removed to get data back,
+              # such as from the Paging File object.
+              ObjectName = "Paging File"
+              Counters = [
+                "% Usage",
+              ]
+              Instances = ["_Total"]
+              Measurement = "win_swap"
+
+            [[inputs.win_services]]
+              ## Names of the services to monitor. Leave empty to monitor all the available services on the host. Globs accepted. Case sensitive.
+              service_names = ["*"]
 
           # Output Plugin - InfluxDB
           [[outputs.influxdb]]
@@ -48,32 +116,22 @@
             password = "snare"
             skip_database_creation = true
 
-          # CPU Input Plugin
-          [[inputs.cpu]]
-            percpu = true
-            totalcpu = true
-            collect_cpu_time = false
-            report_active = true
-
-          # Memory Input Plugin
-          [[inputs.mem]]
-
-          # Disk Input Plugin
-          [[inputs.disk]]
-            ignore_fs = ["tmpfs", "devtmpfs", "devfs", "overlay", "squashfs", "nsfs"]
-
-          # Network Interface Input Plugin
-          [[inputs.net]]
-
-          # System Input Plugin
-          [[inputs.system]]
-
-          # Windows Services Input Plugin
-          [[inputs.win_services]]
-            service_names = ["Snare", "snareAM", "sshd"]
-
         dest: C:\Program Files\InfluxData\telegraf\telegraf.conf
         force: yes
+
+    - name: Stop Telegraf service if running
+      win_service:
+        name: telegraf
+        state: stopped
+      ignore_errors: yes
+
+    - name: Uninstall Telegraf service if installed
+      win_shell: |
+        cd "C:\Program Files\InfluxData\telegraf"
+        .\telegraf.exe service uninstall
+      args:
+        executable: powershell
+      ignore_errors: yes
 
     - name: Install Telegraf service
       win_shell: |
