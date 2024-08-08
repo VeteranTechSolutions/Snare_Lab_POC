@@ -3,15 +3,25 @@
   hosts: windows
   gather_facts: no
   tasks:
+    - name: Ensure 'C:\Temp' directory exists
+      win_file:
+        path: C:\Temp
+        state: directory
+
     - name: Download Telegraf Binary
       win_get_url:
         url: https://dl.influxdata.com/telegraf/releases/telegraf-1.31.0_windows_amd64.zip
         dest: C:\Temp\telegraf-1.31.0_windows_amd64.zip
 
+    - name: Ensure 'C:\Program Files\InfluxData\telegraf' directory exists
+      win_file:
+        path: C:\Program Files\InfluxData\telegraf
+        state: directory
+
     - name: Extract Telegraf archive
       win_unzip:
         src: C:\Temp\telegraf-1.31.0_windows_amd64.zip
-        dest: C:\Program Files\InfluxData\telegraf\
+        dest: C:\Program Files\InfluxData\telegraf
         creates: C:\Program Files\InfluxData\telegraf\telegraf.exe
 
     - name: Create Telegraf configuration file
@@ -32,10 +42,10 @@
 
           # Output Plugin - InfluxDB
           [[outputs.influxdb]]
-            urls = ["http://192.168.10.94:8086"]  # Replace with the address of your InfluxDB instance
+            urls = ["http://192.168.10.94:8086"]
             database = "telegraf"
-            username = "telegraf_user"
-            password = "telegraf_pass"
+            username = "snare"
+            password = "snare"
             skip_database_creation = true
 
           # CPU Input Plugin
@@ -52,43 +62,28 @@
           [[inputs.disk]]
             ignore_fs = ["tmpfs", "devtmpfs", "devfs", "overlay", "squashfs", "nsfs"]
 
-          # DiskIO Input Plugin
-          [[inputs.diskio]]
-
-          # Net Input Plugin
+          # Network Interface Input Plugin
           [[inputs.net]]
-            interfaces = ["*"]
 
           # System Input Plugin
           [[inputs.system]]
 
-          # Swap Memory
-          [[inputs.swap]]
-
-          # Win Services Input Plugin
+          # Windows Services Input Plugin
           [[inputs.win_services]]
-            # By default, monitor all services. Specify names to monitor specific services.
+            service_names = ["Snare", "snareAM", "sshd"]
 
-          # Windows Event Log Input Plugin
-          [[inputs.win_eventlog]]
-            query = '''
-            <QueryList>
-              <Query Id="0">
-                <Select Path="Application">*</Select>
-                <Select Path="System">*</Select>
-                <Select Path="Security">*</Select>
-              </Query>
-            </QueryList>
-            '''
         dest: C:\Program Files\InfluxData\telegraf\telegraf.conf
+        force: yes
 
     - name: Install Telegraf service
-      win_command: >
-        C:\Program Files\InfluxData\telegraf\telegraf.exe --service install --config "C:\Program Files\InfluxData\telegraf\telegraf.conf"
+      win_shell: |
+        cd "C:\Program Files\InfluxData\telegraf"
+        .\telegraf.exe --service install --config "C:\Program Files\InfluxData\telegraf\telegraf.conf"
+      args:
+        executable: powershell
 
     - name: Start Telegraf service
       win_service:
         name: telegraf
         state: started
         start_mode: auto
-
