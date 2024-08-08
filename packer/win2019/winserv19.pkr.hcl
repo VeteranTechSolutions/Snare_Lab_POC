@@ -114,28 +114,26 @@ build {
     script   = "../scripts/disable-windows-updates.ps1"
   }
 
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/disable-windows-defender.ps1"
-  }
+#  provisioner "powershell" {
+#    use_pwsh = true
+#    script   = "../scripts/disable-windows-defender.ps1"
+#  }
 
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/remove-one-drive.ps1"
-  }
+#  provisioner "windows-restart" {
+#  }
 
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/remove-apps.ps1"
-  }
+  #provisioner "powershell" {
+  #  use_pwsh = true
+  #  script   = "../scripts/remove-one-drive.ps1"
+  #}
 
-  provisioner "powershell" {
-    use_pwsh = true
-    script   = "../scripts/provision-guest-tools-qemu-kvm.ps1"
-  }
+  #provisioner "powershell" {
+  #  use_pwsh = true
+  #  script   = "../scripts/remove-apps.ps1"
+  #}
 
-  provisioner "windows-restart" {
-  }
+ # provisioner "windows-restart" {
+ # }
 
   provisioner "powershell" {
     use_pwsh = true
@@ -147,14 +145,18 @@ build {
   #  update_limit = 25
   #}
 
+  provisioner "windows-restart" {
+     restart_timeout = "15m" # Increase this if needed
+  }
+
   provisioner "powershell" {
     use_pwsh = true
     script   = "../scripts/provision-cloudbase-init.ps1"
   }
 
-  provisioner "windows-restart" {
-    restart_timeout = "15m" # Increase this if needed
-  }
+  #provisioner "windows-restart" {
+  #  restart_timeout = "15m" # Increase this if needed
+  #}
 
   provisioner "powershell" {
     use_pwsh = true
