@@ -1,0 +1,30 @@
+---
+- name: Configure all computers to Synchronize with External NTP Server
+  hosts: windows  # Replace with your actual host group or hostname
+  gather_facts: no
+  tasks:
+    - name: Set the timezone to Eastern Standard Time
+      ansible.windows.win_shell: |
+        tzutil /s "Eastern Standard Time"
+
+    - name: Configure the Windows PC's to use an external NTP server
+      ansible.windows.win_shell: |
+        w32tm /config /manualpeerlist:"time.windows.com,0x8" /syncfromflags:manual /reliable:YES /update
+
+    - name: Restart the Windows Time service
+      ansible.windows.win_shell: |
+        net stop w32time
+        net start w32time
+
+    - name: Force the Windows PC's to synchronize its time immediately
+      ansible.windows.win_shell: |
+        w32tm /resync
+
+    - name: Verify the time synchronization configuration
+      ansible.windows.win_shell: |
+        w32tm /query /status
+      register: ntp_status
+
+    - name: Debug NTP status
+      debug:
+        var: ntp_status.stdout_lines
