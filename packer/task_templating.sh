@@ -121,8 +121,8 @@ run_next_script() {
 
 # Initialize each function in the desired order
 source_env_POC
-create_win10
-create_win2019
+#create_win10
+#create_win2019
 #create_win11_uefi
 create_ubuntu
 run_next_script
